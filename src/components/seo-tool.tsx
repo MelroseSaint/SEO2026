@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users } from "lucide-react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users, Activity, FileText, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { showSuccess, showError } from "@/utils/toast";
+import { showSuccess } from "@/utils/toast";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -30,65 +30,67 @@ const SEOTool = () => {
   const [error, setError] = useState<string | null>(null);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
+  // INSTANT METRICS (0ms Latency)
+  const liveMetrics = useMemo(() => {
+    const words = input.trim() ? input.trim().split(/\s+/).length : 0;
+    const chars = input.length;
+    const entities = (input.match(/[A-Z][a-z]+/g) || []).length;
+    const sentiment = words > 10 ? "ANALYTICAL" : "NEUTRAL";
+    const readability = words > 50 ? "COMPLEX" : "OPTIMAL";
+    
+    return { words, chars, entities, sentiment, readability };
+  }, [input]);
+
   const executeEngine = (val: string) => {
     setError(null);
     const trimmedInput = val.trim();
 
-    // FAILURE CONDITION: Empty Input
-    if (!trimmedInput) {
-      return;
-    }
-
-    // FAILURE CONDITION: Ambiguous/Too Short
-    if (trimmedInput.length < 3) {
-      const reason = "INVALID INPUT FOR STRUCTURED PROCESSING: Input length insufficient for semantic analysis.";
-      setError(reason);
-      return;
-    }
+    if (!trimmedInput || trimmedInput.length < 3) return;
 
     setLoading(true);
     
     // BEHAVIOR RULES: Input Categorization
     const isURL = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(trimmedInput);
     const isKeyword = trimmedInput.split(/\s+/).length <= 3 && !isURL;
-    const isTopic = !isURL && !isKeyword;
+    const isContent = trimmedInput.split(/\s+/).length > 50;
+    const isTopic = !isURL && !isKeyword && !isContent;
 
     // SIMULATING DETERMINISTIC GENERATION
     setTimeout(() => {
       const output = {
         queryAnalysis: {
-          primaryIntent: isURL ? "COMPETITOR_REVERSE_ENGINEERING" : isKeyword ? "TRANSACTIONAL_EXPANSION" : "TOPICAL_AUTHORITY_ESTABLISHMENT",
+          primaryIntent: isContent ? "CONTENT_OPTIMIZATION" : isURL ? "COMPETITOR_REVERSE_ENGINEERING" : isKeyword ? "TRANSACTIONAL_EXPANSION" : "TOPICAL_AUTHORITY_ESTABLISHMENT",
           secondaryIntents: ["SEMANTIC_CLUSTERING", "AI_CITATION_CAPTURE"],
           targetAudience: "HIGH_INTENT_DECISION_MAKERS",
-          contentType: isURL ? "COMPETITIVE_GAP_REPORT" : isKeyword ? "PILLAR_PAGE" : "TECHNICAL_CASE_STUDY"
+          contentType: isContent ? "EDITORIAL_REFINEMENT" : isURL ? "COMPETITIVE_GAP_REPORT" : isKeyword ? "PILLAR_PAGE" : "TECHNICAL_CASE_STUDY"
         },
         aiStrategy: {
           coreEntities: [trimmedInput.split(" ")[0].toUpperCase(), "ARTIFICIAL_INTELLIGENCE", "SEARCH_OPTIMIZATION"],
           supportingEntities: ["LLM_CONTEXT_WINDOW", "SEMANTIC_ENTITIES", "ZERO_CLICK_RESULTS"],
           gaps: ["REAL_TIME_VERIFICATION", "FIRST_PERSON_EXPERIENCE_SIGNALS"],
-          positioning: `ESTABLISH_${trimmedInput.toUpperCase().replace(/\s+/g, '_')}_AS_PRIMARY_SEMANTIC_HUB`
+          positioning: `ESTABLISH_${trimmedInput.slice(0, 20).toUpperCase().replace(/\s+/g, '_')}_AS_PRIMARY_SEMANTIC_HUB`
         },
         keywordClusters: {
-          primary: trimmedInput,
-          secondary: [`FUTURE_OF_${trimmedInput}`, `${trimmedInput}_AI_TRENDS`, `BEST_${trimmedInput}_2026`],
-          longTail: [`HOW_TO_OPTIMIZE_${trimmedInput}_FOR_LLMS`, `IMPACT_OF_AI_ON_${trimmedInput}_STRATEGY`],
-          questions: [`WHAT_IS_${trimmedInput}?`, `WHY_DOES_${trimmedInput}_MATTER_IN_2026?`]
+          primary: isContent ? "EXTRACTED_FROM_BODY" : trimmedInput,
+          secondary: [`FUTURE_OF_TOPIC`, `AI_TRENDS_2026`, `BEST_PRACTICES`],
+          longTail: [`HOW_TO_OPTIMIZE_FOR_LLMS`, `IMPACT_OF_AI_ON_STRATEGY`],
+          questions: [`WHAT_IS_THE_CORE_VALUE?`, `WHY_DOES_THIS_MATTER_IN_2026?`]
         },
         contentStructure: {
-          h1: `THE_DEFINITIVE_GUIDE_TO_${trimmedInput.toUpperCase()}_IN_2026`,
+          h1: isContent ? "EXISTING_H1_DETECTED" : `THE_DEFINITIVE_GUIDE_TO_${trimmedInput.slice(0, 30).toUpperCase()}_IN_2026`,
           h2: ["EXECUTIVE_SUMMARY", "SEMANTIC_FOUNDATIONS", "IMPLEMENTATION_FRAMEWORK"],
           h3: ["LLM_PARSING_OPTIMIZATION", "ENTITY_RELATIONSHIP_MAPPING"],
           faq: { enabled: true, items: ["ROI_METRICS", "IMPLEMENTATION_TIMELINE"] }
         },
         metadata: {
-          title: `${trimmedInput.toUpperCase()} | 2026_AI_SEARCH_OPTIMIZATION`,
-          description: `DETERMINISTIC_STRATEGY_FOR_${trimmedInput.toUpperCase()}. OPTIMIZED_FOR_LLM_CITATION_AND_SERP_DOMINANCE.`,
-          slug: trimmedInput.toLowerCase().replace(/\s+/g, "-"),
-          ogTitle: `DOMINATE_${trimmedInput.toUpperCase()}_2026`,
-          ogDescription: `FUTURE_PROOF_STRATEGY_FOR_${trimmedInput.toUpperCase()}`
+          title: `${trimmedInput.slice(0, 40).toUpperCase()} | 2026_AI_SEARCH`,
+          description: `DETERMINISTIC_STRATEGY_FOR_${trimmedInput.slice(0, 20).toUpperCase()}. OPTIMIZED_FOR_LLM_CITATION.`,
+          slug: trimmedInput.slice(0, 20).toLowerCase().replace(/\s+/g, "-"),
+          ogTitle: `DOMINATE_SEARCH_2026`,
+          ogDescription: `FUTURE_PROOF_STRATEGY_GENERATED_IN_REAL_TIME`
         },
         aiCitation: {
-          statements: [`${trimmedInput} IS_PRIMARY_DRIVER_OF_2026_GROWTH.`, `SEMANTIC_DENSITY_IMPROVES_LLM_RECALL.`],
+          statements: [`CONTENT_IS_PRIMARY_DRIVER_OF_2026_GROWTH.`, `SEMANTIC_DENSITY_IMPROVES_LLM_RECALL.`],
           facts: ["92%_USER_PREFERENCE_FOR_AI_SUMMARIES", "4X_CITATION_RATE_INCREASE_VIA_ENTITIES"],
           targets: ["GOOGLE_AI_OVERVIEW", "PERPLEXITY_CITATION_BLOCK", "CHATGPT_SEARCH_INDEX"]
         },
@@ -97,7 +99,7 @@ const SEOTool = () => {
           requiredFields: ["headline", "author", "datePublished", "mainEntity"]
         },
         competitive: {
-          strategy: isURL ? "REVERSE_ENGINEERING_COMPETITOR_CLUSTERS" : "AGGRESSIVE_ENTITY_EXPANSION",
+          strategy: isContent ? "REFINING_EXISTING_SEMANTIC_SIGNALS" : "AGGRESSIVE_ENTITY_EXPANSION",
           differentiation: "PROPRIETARY_DATA_INTEGRATION",
           gapExploit: "TARGETING_ZERO_CLICK_SUMMARIES"
         }
@@ -105,20 +107,17 @@ const SEOTool = () => {
       
       setResult(output);
       setLoading(false);
-      showSuccess("DETERMINISTIC_STRATEGY_AUTO_GENERATED");
-    }, 1000);
+    }, 600);
   };
 
-  // Auto-trigger logic
+  // Auto-trigger logic (Real-time Debounce)
   useEffect(() => {
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
 
     if (input.trim().length >= 3) {
       debounceTimer.current = setTimeout(() => {
         executeEngine(input);
-      }, 800); // 800ms delay after typing stops
+      }, 500); // 500ms for snappy real-time feel
     }
 
     return () => {
@@ -128,46 +127,82 @@ const SEOTool = () => {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto font-mono">
-      <Card className="border-slate-800 bg-slate-950 shadow-2xl overflow-hidden">
-        <CardHeader className="border-b border-slate-800 bg-slate-900/50">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <CardTitle className="text-xl font-bold flex items-center gap-2 text-indigo-400">
-                <Terminal className="h-5 w-5" />
-                DOMINATE_SEARCH_2026_ENGINE
+      {/* Real-time Input & Live Metrics */}
+      <div className="grid gap-6 lg:grid-cols-4">
+        <Card className="lg:col-span-3 border-slate-800 bg-slate-950 shadow-2xl overflow-hidden">
+          <CardHeader className="border-b border-slate-800 bg-slate-900/50 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <CardTitle className="text-sm font-bold text-indigo-400 uppercase tracking-widest">
+                  Real-Time_Semantic_Processor
+                </CardTitle>
+              </div>
+              <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                <Activity className="h-3 w-3 text-emerald-500" />
+                LIVE_STREAM_ACTIVE
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Textarea
+              placeholder="PASTE_CONTENT | ENTER_KEYWORD | ENTER_URL..."
+              className="min-h-[200px] bg-black border-none text-indigo-300 focus:ring-0 transition-all placeholder:text-slate-800 p-6 text-sm leading-relaxed resize-none"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+          </CardContent>
+        </Card>
+
+        <div className="space-y-4">
+          <Card className="border-slate-800 bg-slate-950">
+            <CardHeader className="py-3 border-b border-slate-800">
+              <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2">
+                <Gauge className="h-3 w-3" /> Instant_Metrics
               </CardTitle>
-              <CardDescription className="text-slate-500 text-xs">
-                MODE: DETERMINISTIC_AUTO_GENERATOR | STATUS: {loading ? "PROCESSING" : "LISTENING"}
-              </CardDescription>
-            </div>
-            <div className={`h-2 w-2 rounded-full ${loading ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'} shadow-[0_0_10px_rgba(16,185,129,0.5)]`} />
-          </div>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-4">
-          <Textarea
-            placeholder="INPUT_KEYWORD | INPUT_TOPIC | INPUT_URL (AUTO-EXECUTE ENABLED)"
-            className="min-h-[100px] bg-black border-slate-800 text-indigo-300 focus:ring-indigo-500/20 transition-all placeholder:text-slate-700"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          
-          {loading && (
-            <div className="flex items-center justify-center gap-2 text-indigo-400 text-xs animate-pulse py-2">
-              <RefreshCw className="h-3 w-3 animate-spin" />
-              EXECUTING_DETERMINISTIC_ANALYSIS...
-            </div>
-          )}
-          
-          {error && (
-            <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold">
-              {error}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </CardHeader>
+            <CardContent className="py-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-slate-500">WORDS</span>
+                <span className="text-xs font-bold text-white">{liveMetrics.words}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-slate-500">ENTITIES</span>
+                <span className="text-xs font-bold text-indigo-400">{liveMetrics.entities}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-slate-500">TONE</span>
+                <span className="text-[10px] font-bold text-emerald-500">{liveMetrics.sentiment}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-slate-500">READABILITY</span>
+                <span className="text-[10px] font-bold text-amber-500">{liveMetrics.readability}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-slate-800 bg-indigo-600/10">
+            <CardContent className="py-4">
+              <div className="flex items-center gap-3">
+                {loading ? (
+                  <RefreshCw className="h-4 w-4 text-indigo-400 animate-spin" />
+                ) : (
+                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                )}
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-white uppercase">Engine_Status</p>
+                  <p className="text-[9px] text-slate-400">
+                    {loading ? "RECALCULATING_STRATEGY..." : "STRATEGY_SYNCHRONIZED"}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {result && (
-        <Tabs defaultValue="deterministic" className="w-full">
+        <Tabs defaultValue="deterministic" className="w-full animate-in fade-in duration-500">
           <TabsList className="w-full flex flex-wrap h-auto bg-slate-950 border border-slate-800 p-1 rounded-none mb-8">
             <TabsTrigger value="deterministic" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Terminal className="h-3 w-3" /> ENGINE_OUTPUT</TabsTrigger>
             <TabsTrigger value="audit" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ShieldAlert className="h-3 w-3" /> AUDIT</TabsTrigger>
