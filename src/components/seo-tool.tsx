@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { 
   Sparkles, ArrowRight, LayoutDashboard, BrainCircuit, Map, 
   Fingerprint, Code2, Users, ListTree, ArrowRightLeft, 
-  RefreshCw, Wand2, Share2, ShieldCheck, Terminal
+  RefreshCw, Wand2, Share2, ShieldCheck, Terminal, ShieldAlert
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +25,7 @@ import PromptGenerator from "./prompt-generator";
 import LinkingGraph from "./linking-graph";
 import AICredibility from "./ai-credibility";
 import DeterministicOutput from "./deterministic-output";
+import ComplianceAuditor from "./compliance-auditor";
 
 const SEOTool = () => {
   const [input, setInput] = useState("");
@@ -137,6 +138,7 @@ const SEOTool = () => {
         <Tabs defaultValue="deterministic" className="w-full">
           <TabsList className="w-full flex flex-wrap h-auto bg-slate-950 border border-slate-800 p-1 rounded-xl mb-8">
             <TabsTrigger value="deterministic" className="flex-1 gap-2 py-3 font-mono text-xs"><Terminal className="h-4 w-4" /> ENGINE_OUTPUT</TabsTrigger>
+            <TabsTrigger value="audit" className="flex-1 gap-2 py-3 font-mono text-xs"><ShieldAlert className="h-4 w-4" /> AUDIT</TabsTrigger>
             <TabsTrigger value="credibility" className="flex-1 gap-2 py-3 font-mono text-xs"><ShieldCheck className="h-4 w-4" /> E-E-A-T</TabsTrigger>
             <TabsTrigger value="simulation" className="flex-1 gap-2 py-3 font-mono text-xs"><BrainCircuit className="h-4 w-4" /> AI_SIM</TabsTrigger>
             <TabsTrigger value="intent" className="flex-1 gap-2 py-3 font-mono text-xs"><Map className="h-4 w-4" /> INTENT</TabsTrigger>
@@ -152,6 +154,10 @@ const SEOTool = () => {
 
           <TabsContent value="deterministic">
             <DeterministicOutput data={result} />
+          </TabsContent>
+
+          <TabsContent value="audit">
+            <ComplianceAuditor data={result} />
           </TabsContent>
 
           <TabsContent value="credibility">
