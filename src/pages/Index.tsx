@@ -76,7 +76,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="relative z-10 border-t border-slate-200 dark:border-white/5 py-12 mt-20">
         <div className="container mx-auto px-4 text-center text-slate-500 dark:text-gray-500 text-sm">
-          <p>© 2024 SEO2026 Discovery Engine. Built for the future of search.</p>
+          <p>© 2025 SEO2026 Discovery Engine. Built for the future of search.</p>
         </div>
       </footer>
     </div>
