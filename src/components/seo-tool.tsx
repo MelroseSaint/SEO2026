@@ -1,11 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { 
-  Sparkles, ArrowRight, LayoutDashboard, BrainCircuit, Map, 
-  Fingerprint, Code2, Users, ListTree, ArrowRightLeft, 
-  RefreshCw, Wand2, Share2, ShieldCheck, Terminal, ShieldAlert
-} from "lucide-react";
+import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -31,125 +27,147 @@ const SEOTool = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const generateSEO = () => {
-    if (!input.trim()) {
-      showError("INVALID INPUT FOR STRUCTURED PROCESSING: Input is empty.");
+  const executeEngine = () => {
+    setError(null);
+    const trimmedInput = input.trim();
+
+    // FAILURE CONDITION: Empty Input
+    if (!trimmedInput) {
+      const reason = "INVALID INPUT FOR STRUCTURED PROCESSING: Input is empty.";
+      setError(reason);
+      showError(reason);
+      return;
+    }
+
+    // FAILURE CONDITION: Ambiguous/Too Short
+    if (trimmedInput.length < 3) {
+      const reason = "INVALID INPUT FOR STRUCTURED PROCESSING: Input length insufficient for semantic analysis.";
+      setError(reason);
+      showError(reason);
       return;
     }
 
     setLoading(true);
     
-    // Behavior Rules Logic
-    const isURL = input.includes("http://") || input.includes("https://") || input.includes(".com") || input.includes(".org");
-    const isKeyword = input.split(" ").length <= 3 && !isURL;
+    // BEHAVIOR RULES: Input Categorization
+    const isURL = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(trimmedInput);
+    const isKeyword = trimmedInput.split(/\s+/).length <= 3 && !isURL;
     const isTopic = !isURL && !isKeyword;
 
+    // SIMULATING DETERMINISTIC GENERATION
     setTimeout(() => {
-      const deterministicResult = {
+      const output = {
         queryAnalysis: {
-          primaryIntent: isURL ? "Competitor Reverse Engineering" : isKeyword ? "Transactional/Informational Expansion" : "Topical Authority Establishment",
-          secondaryIntents: ["Semantic Clustering", "AI Citation Capture"],
-          targetAudience: "High-intent B2B/B2C Decision Makers",
-          contentType: isKeyword ? "Pillar Page / Comprehensive Guide" : "Technical Analysis / Case Study"
+          primaryIntent: isURL ? "COMPETITOR_REVERSE_ENGINEERING" : isKeyword ? "TRANSACTIONAL_EXPANSION" : "TOPICAL_AUTHORITY_ESTABLISHMENT",
+          secondaryIntents: ["SEMANTIC_CLUSTERING", "AI_CITATION_CAPTURE"],
+          targetAudience: "HIGH_INTENT_DECISION_MAKERS",
+          contentType: isURL ? "COMPETITIVE_GAP_REPORT" : isKeyword ? "PILLAR_PAGE" : "TECHNICAL_CASE_STUDY"
         },
         aiStrategy: {
-          coreEntities: [input.split(" ")[0], "Artificial Intelligence", "Search Optimization"],
-          supportingEntities: ["LLM Context", "Semantic Web", "Zero-Click Results"],
-          gaps: ["Real-time data verification", "First-person experience signals"],
-          positioning: `Establish ${input} as the definitive semantic hub for 2026 search crawlers.`
+          coreEntities: [trimmedInput.split(" ")[0].toUpperCase(), "ARTIFICIAL_INTELLIGENCE", "SEARCH_OPTIMIZATION"],
+          supportingEntities: ["LLM_CONTEXT_WINDOW", "SEMANTIC_ENTITIES", "ZERO_CLICK_RESULTS"],
+          gaps: ["REAL_TIME_VERIFICATION", "FIRST_PERSON_EXPERIENCE_SIGNALS"],
+          positioning: `ESTABLISH_${trimmedInput.toUpperCase().replace(/\s+/g, '_')}_AS_PRIMARY_SEMANTIC_HUB`
         },
         keywordClusters: {
-          primary: input,
-          secondary: [`Future of ${input}`, `${input} AI trends`, `Best ${input} 2026`],
-          longTail: [`How to optimize ${input} for LLMs`, `Impact of AI on ${input} strategy`],
-          questions: [`What is ${input}?`, `Why does ${input} matter in 2026?`]
+          primary: trimmedInput,
+          secondary: [`FUTURE_OF_${trimmedInput}`, `${trimmedInput}_AI_TRENDS`, `BEST_${trimmedInput}_2026`],
+          longTail: [`HOW_TO_OPTIMIZE_${trimmedInput}_FOR_LLMS`, `IMPACT_OF_AI_ON_${trimmedInput}_STRATEGY`],
+          questions: [`WHAT_IS_${trimmedInput}?`, `WHY_DOES_${trimmedInput}_MATTER_IN_2026?`]
         },
         contentStructure: {
-          h1: `The Definitive Guide to ${input} in the AI Era`,
-          h2: ["Executive Summary", "Semantic Foundations", "Implementation Framework"],
-          h3: ["LLM Parsing Optimization", "Entity Relationship Mapping"],
-          faq: { enabled: true, items: ["What is the ROI?", "How to start?"] }
+          h1: `THE_DEFINITIVE_GUIDE_TO_${trimmedInput.toUpperCase()}_IN_2026`,
+          h2: ["EXECUTIVE_SUMMARY", "SEMANTIC_FOUNDATIONS", "IMPLEMENTATION_FRAMEWORK"],
+          h3: ["LLM_PARSING_OPTIMIZATION", "ENTITY_RELATIONSHIP_MAPPING"],
+          faq: { enabled: true, items: ["ROI_METRICS", "IMPLEMENTATION_TIMELINE"] }
         },
         metadata: {
-          title: `${input} | 2026 AI Search Optimization`,
-          description: `Master ${input} with our deterministic SEO engine. Optimized for LLM citations and traditional SERP dominance.`,
-          slug: input.toLowerCase().replace(/ /g, "-"),
-          ogTitle: `Dominate ${input} in 2026`,
-          ogDescription: `The future of ${input} search optimization is here.`
+          title: `${trimmedInput.toUpperCase()} | 2026_AI_SEARCH_OPTIMIZATION`,
+          description: `DETERMINISTIC_STRATEGY_FOR_${trimmedInput.toUpperCase()}. OPTIMIZED_FOR_LLM_CITATION_AND_SERP_DOMINANCE.`,
+          slug: trimmedInput.toLowerCase().replace(/\s+/g, "-"),
+          ogTitle: `DOMINATE_${trimmedInput.toUpperCase()}_2026`,
+          ogDescription: `FUTURE_PROOF_STRATEGY_FOR_${trimmedInput.toUpperCase()}`
         },
         aiCitation: {
-          statements: [`${input} is the primary driver of 2026 digital growth.`, `Semantic density in ${input} improves LLM recall.`],
-          facts: ["92% of users prefer AI-summarized results.", "Entity-based SEO increases citation rates by 4x."],
-          targets: ["Google AI Overview", "Perplexity Citation Block", "ChatGPT Search Index"]
+          statements: [`${trimmedInput} IS_PRIMARY_DRIVER_OF_2026_GROWTH.`, `SEMANTIC_DENSITY_IMPROVES_LLM_RECALL.`],
+          facts: ["92%_USER_PREFERENCE_FOR_AI_SUMMARIES", "4X_CITATION_RATE_INCREASE_VIA_ENTITIES"],
+          targets: ["GOOGLE_AI_OVERVIEW", "PERPLEXITY_CITATION_BLOCK", "CHATGPT_SEARCH_INDEX"]
         },
         schema: {
           types: ["TechArticle", "FAQPage", "Service"],
           requiredFields: ["headline", "author", "datePublished", "mainEntity"]
         },
         competitive: {
-          strategy: isURL ? "Reverse engineering competitor semantic clusters." : "Aggressive entity-based content expansion.",
-          differentiation: "Proprietary data integration and first-person experience signals.",
-          gapExploit: "Targeting 'Zero-Click' summaries where competitors lack structured data."
+          strategy: isURL ? "REVERSE_ENGINEERING_COMPETITOR_CLUSTERS" : "AGGRESSIVE_ENTITY_EXPANSION",
+          differentiation: "PROPRIETARY_DATA_INTEGRATION",
+          gapExploit: "TARGETING_ZERO_CLICK_SUMMARIES"
         }
       };
       
-      setResult(deterministicResult);
+      setResult(output);
       setLoading(false);
-      showSuccess("DETERMINISTIC STRATEGY GENERATED");
-    }, 1500);
+      showSuccess("DETERMINISTIC_STRATEGY_GENERATED");
+    }, 1200);
   };
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto font-mono">
       <Card className="border-slate-800 bg-slate-950 shadow-2xl overflow-hidden">
         <CardHeader className="border-b border-slate-800 bg-slate-900/50">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <CardTitle className="text-xl font-mono flex items-center gap-2 text-indigo-400">
+              <CardTitle className="text-xl font-bold flex items-center gap-2 text-indigo-400">
                 <Terminal className="h-5 w-5" />
-                DETERMINISTIC ENGINE v1.0
+                DOMINATE_SEARCH_2026_ENGINE
               </CardTitle>
-              <CardDescription className="text-slate-500 font-mono text-xs">
-                MODE: STRICT_STRATEGY_GENERATOR | STATUS: READY
+              <CardDescription className="text-slate-500 text-xs">
+                MODE: DETERMINISTIC_STRATEGY_GENERATOR | STATUS: {loading ? "PROCESSING" : "READY"}
               </CardDescription>
             </div>
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+            <div className={`h-2 w-2 rounded-full ${loading ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'} shadow-[0_0_10px_rgba(16,185,129,0.5)]`} />
           </div>
         </CardHeader>
         <CardContent className="pt-6 space-y-4">
           <Textarea
-            placeholder="INPUT KEYWORD, TOPIC, OR URL..."
-            className="min-h-[100px] bg-black border-slate-800 font-mono text-indigo-300 focus:ring-indigo-500/20 transition-all"
+            placeholder="INPUT_KEYWORD | INPUT_TOPIC | INPUT_URL"
+            className="min-h-[100px] bg-black border-slate-800 text-indigo-300 focus:ring-indigo-500/20 transition-all placeholder:text-slate-700"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
           <Button 
-            onClick={generateSEO} 
+            onClick={executeEngine} 
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 font-mono font-bold tracking-widest uppercase"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 font-bold tracking-widest uppercase rounded-none"
           >
-            {loading ? "PROCESSING_INPUT..." : "EXECUTE_STRATEGY_GENERATION"}
+            {loading ? "EXECUTING_ANALYSIS..." : "EXECUTE_STRATEGY_GENERATION"}
           </Button>
+          
+          {error && (
+            <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold">
+              {error}
+            </div>
+          )}
         </CardContent>
       </Card>
 
       {result && (
         <Tabs defaultValue="deterministic" className="w-full">
-          <TabsList className="w-full flex flex-wrap h-auto bg-slate-950 border border-slate-800 p-1 rounded-xl mb-8">
-            <TabsTrigger value="deterministic" className="flex-1 gap-2 py-3 font-mono text-xs"><Terminal className="h-4 w-4" /> ENGINE_OUTPUT</TabsTrigger>
-            <TabsTrigger value="audit" className="flex-1 gap-2 py-3 font-mono text-xs"><ShieldAlert className="h-4 w-4" /> AUDIT</TabsTrigger>
-            <TabsTrigger value="credibility" className="flex-1 gap-2 py-3 font-mono text-xs"><ShieldCheck className="h-4 w-4" /> E-E-A-T</TabsTrigger>
-            <TabsTrigger value="simulation" className="flex-1 gap-2 py-3 font-mono text-xs"><BrainCircuit className="h-4 w-4" /> AI_SIM</TabsTrigger>
-            <TabsTrigger value="intent" className="flex-1 gap-2 py-3 font-mono text-xs"><Map className="h-4 w-4" /> INTENT</TabsTrigger>
-            <TabsTrigger value="structure" className="flex-1 gap-2 py-3 font-mono text-xs"><ListTree className="h-4 w-4" /> STRUCTURE</TabsTrigger>
-            <TabsTrigger value="entities" className="flex-1 gap-2 py-3 font-mono text-xs"><Fingerprint className="h-4 w-4" /> ENTITIES</TabsTrigger>
-            <TabsTrigger value="gap" className="flex-1 gap-2 py-3 font-mono text-xs"><ArrowRightLeft className="h-4 w-4" /> GAP_ANALYSIS</TabsTrigger>
-            <TabsTrigger value="refresh" className="flex-1 gap-2 py-3 font-mono text-xs"><RefreshCw className="h-4 w-4" /> REFRESH</TabsTrigger>
-            <TabsTrigger value="generator" className="flex-1 gap-2 py-3 font-mono text-xs"><Wand2 className="h-4 w-4" /> ASSETS</TabsTrigger>
-            <TabsTrigger value="schema" className="flex-1 gap-2 py-3 font-mono text-xs"><Code2 className="h-4 w-4" /> SCHEMA</TabsTrigger>
-            <TabsTrigger value="graph" className="flex-1 gap-2 py-3 font-mono text-xs"><Share2 className="h-4 w-4" /> GRAPH</TabsTrigger>
-            <TabsTrigger value="competitors" className="flex-1 gap-2 py-3 font-mono text-xs"><Users className="h-4 w-4" /> COMP_INTEL</TabsTrigger>
+          <TabsList className="w-full flex flex-wrap h-auto bg-slate-950 border border-slate-800 p-1 rounded-none mb-8">
+            <TabsTrigger value="deterministic" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Terminal className="h-3 w-3" /> ENGINE_OUTPUT</TabsTrigger>
+            <TabsTrigger value="audit" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ShieldAlert className="h-3 w-3" /> AUDIT</TabsTrigger>
+            <TabsTrigger value="credibility" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ShieldCheck className="h-3 w-3" /> E-E-A-T</TabsTrigger>
+            <TabsTrigger value="simulation" className="flex-1 gap-2 py-3 text-[10px] uppercase"><BrainCircuit className="h-3 w-3" /> AI_SIM</TabsTrigger>
+            <TabsTrigger value="intent" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Map className="h-3 w-3" /> INTENT</TabsTrigger>
+            <TabsTrigger value="structure" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ListTree className="h-3 w-3" /> STRUCTURE</TabsTrigger>
+            <TabsTrigger value="entities" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Fingerprint className="h-3 w-3" /> ENTITIES</TabsTrigger>
+            <TabsTrigger value="gap" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ArrowRightLeft className="h-3 w-3" /> GAP_ANALYSIS</TabsTrigger>
+            <TabsTrigger value="refresh" className="flex-1 gap-2 py-3 text-[10px] uppercase"><RefreshCw className="h-3 w-3" /> REFRESH</TabsTrigger>
+            <TabsTrigger value="generator" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Wand2 className="h-3 w-3" /> ASSETS</TabsTrigger>
+            <TabsTrigger value="schema" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Code2 className="h-3 w-3" /> SCHEMA</TabsTrigger>
+            <TabsTrigger value="graph" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Share2 className="h-3 w-3" /> GRAPH</TabsTrigger>
+            <TabsTrigger value="competitors" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Users className="h-3 w-3" /> COMP_INTEL</TabsTrigger>
           </TabsList>
 
           <TabsContent value="deterministic">
