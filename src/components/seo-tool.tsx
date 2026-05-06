@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users, Activity, FileText, Gauge } from "lucide-react";
+import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users, Activity, FileText, Gauge, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -49,60 +49,81 @@ const SEOTool = () => {
 
     setLoading(true);
     
-    // BEHAVIOR RULES: Input Categorization
-    const isURL = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(trimmedInput);
-    const isKeyword = trimmedInput.split(/\s+/).length <= 3 && !isURL;
-    const isContent = trimmedInput.split(/\s+/).length > 50;
-    const isTopic = !isURL && !isKeyword && !isContent;
+    // CONTEXT IDENTIFICATION LOGIC
+    const lowerInput = trimmedInput.toLowerCase();
+    
+    // 1. Detect Industry
+    let industry = "GENERAL_TECH";
+    if (lowerInput.match(/buy|price|shop|cart|store|product/)) industry = "E-COMMERCE";
+    else if (lowerInput.match(/api|software|saas|platform|dashboard|user/)) industry = "SAAS_ENTERPRISE";
+    else if (lowerInput.match(/health|medical|doctor|patient|wellness/)) industry = "HEALTHCARE_TECH";
+    else if (lowerInput.match(/bank|crypto|finance|money|trading|wallet/)) industry = "FINTECH";
+    else if (lowerInput.match(/learn|course|education|student|school/)) industry = "EDTECH";
 
-    // SIMULATING DETERMINISTIC GENERATION WITH 2026-SPECIFIC DATA
+    // 2. Detect Site/Content Type
+    let siteType = "TOPICAL_PILLAR";
+    if (lowerInput.match(/http/)) siteType = "EXTERNAL_DOMAIN_ANALYSIS";
+    else if (lowerInput.match(/how to|guide|tutorial|steps/)) siteType = "EDUCATIONAL_GUIDE";
+    else if (lowerInput.match(/vs|compare|alternative/)) siteType = "COMPARISON_ENGINE";
+    else if (trimmedInput.split(/\s+/).length > 100) siteType = "LONG_FORM_EDITORIAL";
+
+    // 3. Detect Core Purpose
+    const corePurpose = lowerInput.split(/\s+/).slice(0, 5).join("_").toUpperCase().replace(/[^\w]/g, '');
+
+    // SIMULATING DETERMINISTIC GENERATION WITH TARGETED CONTEXT
     setTimeout(() => {
       const cleanInput = trimmedInput.slice(0, 30).replace(/[^\w\s]/gi, '');
       const output = {
+        identification: {
+          industry,
+          siteType,
+          detectedPurpose: corePurpose,
+          confidenceScore: 94
+        },
         queryAnalysis: {
-          primaryIntent: isContent ? "SEMANTIC_REINFORCEMENT" : isURL ? "REVERSE_ENTITY_MAPPING" : isKeyword ? "ZERO_CLICK_CAPTURE" : "TOPICAL_AUTHORITY_ESTABLISHMENT",
+          primaryIntent: industry === "E-COMMERCE" ? "TRANSACTIONAL_CONVERSION" : "TOPICAL_AUTHORITY",
           secondaryIntents: ["LLM_CONTEXT_INJECTION", "SGE_VISIBILITY_OPTIMIZATION"],
-          targetAudience: "AI_AGENT_PARSERS & HIGH_VALUE_HUMAN_USERS",
-          contentType: isContent ? "SEMANTIC_PILLAR_REFINEMENT" : isURL ? "COMPETITIVE_GAP_EXPLOIT" : isKeyword ? "DIRECT_ANSWER_BLOCK" : "TECHNICAL_AUTHORITY_GUIDE"
+          targetAudience: `${industry}_DECISION_MAKERS`,
+          contentType: siteType
         },
         aiStrategy: {
-          coreEntities: [cleanInput.toUpperCase(), "SEMANTIC_SEARCH", "LLM_OPTIMIZATION", "KNOWLEDGE_GRAPH"],
-          supportingEntities: ["CONTEXTUAL_RELEVANCE", "ENTITY_RELATIONSHIP_MAPPING", "RAG_SYSTEM_COMPATIBILITY"],
-          gaps: ["FIRST_PERSON_VERIFICATION", "REAL_TIME_DATA_CITATIONS", "PROPRIETARY_INSIGHT_DENSITY"],
-          positioning: `ESTABLISH_${cleanInput.toUpperCase().replace(/\s+/g, '_')}_AS_PRIMARY_KNOWLEDGE_NODE`
+          coreEntities: [cleanInput.toUpperCase(), industry, "SEMANTIC_SEARCH", "KNOWLEDGE_GRAPH"],
+          supportingEntities: ["CONTEXTUAL_RELEVANCE", "ENTITY_RELATIONSHIP_MAPPING", "RAG_COMPATIBILITY"],
+          gaps: ["FIRST_PERSON_VERIFICATION", "PROPRIETARY_INSIGHT_DENSITY"],
+          positioning: `ESTABLISH_AUTHORITY_IN_${industry}_VERTICAL`
         },
         keywordClusters: {
           primary: cleanInput,
-          secondary: [`${cleanInput} AI Search Trends`, `Semantic Optimization for ${cleanInput}`, `Future of ${cleanInput} 2026`],
-          longTail: [`How to optimize ${cleanInput} for LLM citations`, `Impact of SGE on ${cleanInput} visibility`, `Best practices for ${cleanInput} entity mapping`],
-          questions: [`What is the future of ${cleanInput}?`, `How does AI impact ${cleanInput} strategy?`, `Why is ${cleanInput} critical for 2026 search?`]
+          secondary: [`${cleanInput} for ${industry}`, `Best ${industry} solutions 2026`, `Future of ${cleanInput}`],
+          longTail: [`How to implement ${cleanInput} in ${industry}`, `Impact of AI on ${industry} ${cleanInput}`],
+          questions: [`What is the best ${cleanInput} for ${industry}?`, `Why use ${cleanInput} in 2026?`]
         },
         contentStructure: {
-          h1: isContent ? "EXISTING_H1_DETECTED" : `The Definitive 2026 Guide to ${cleanInput}`,
-          h2: ["Executive Summary: The AI Search Shift", "Core Semantic Foundations", "Implementation Framework for LLM Visibility"],
-          h3: ["Optimizing for Contextual Recall", "Entity-Based Relationship Mapping", "Zero-Click Result Capture Strategies"],
-          faq: { enabled: true, items: ["ROI Benchmarks for 2026", "Technical Implementation Timeline"] }
+          h1: `The Definitive 2026 ${industry} Guide to ${cleanInput}`,
+          h2: [`Why ${industry} Needs ${cleanInput} Now`, "Core Semantic Foundations", "Implementation Framework"],
+          h3: ["Optimizing for Contextual Recall", "Entity-Based Relationship Mapping"],
+          faq: { enabled: true, items: [`${industry} ROI Benchmarks`, "Technical Implementation"] }
         },
         metadata: {
-          title: `${cleanInput} | 2026 AI Search & Semantic Strategy`,
-          description: `Master ${cleanInput} in the era of AI search. Optimized for LLM citations, SGE visibility, and high-intent user capture.`,
+          title: `${cleanInput} | Leading ${industry} Strategy 2026`,
+          description: `Advanced ${industry} optimization for ${cleanInput}. Targeted for AI search and high-intent user capture.`,
           slug: cleanInput.toLowerCase().replace(/\s+/g, "-"),
-          ogTitle: `Dominate ${cleanInput} Search in 2026`,
-          ogDescription: `Advanced semantic strategy for ${cleanInput} optimized for the next generation of search engines.`
+          ogTitle: `Dominate ${industry} Search with ${cleanInput}`,
+          ogDescription: `Surgical SEO strategy for ${industry} applications.`
         },
         aiCitation: {
-          statements: [`${cleanInput} is the primary catalyst for semantic growth in 2026.`, `High entity density in ${cleanInput} content improves LLM recall by 40%.`],
-          facts: ["94% of users prefer AI-synthesized summaries for complex queries", "Entity-linked content sees 3.5x higher citation rates in Perplexity"],
-          targets: ["Google AI Overviews", "Perplexity Citation Blocks", "Gemini Search Index", "ChatGPT Search"]
+          statements: [`${cleanInput} is the primary catalyst for ${industry} growth in 2026.`],
+          facts: [`94% of ${industry} users prefer AI-synthesized summaries`, "Entity-linked content sees 3.5x higher citation rates"],
+          targets: ["Google AI Overviews", "Perplexity Citation Blocks", "Gemini Search Index"]
         },
         schema: {
-          types: ["TechArticle", "FAQPage", "Dataset", "Service"],
-          requiredFields: ["headline", "author", "datePublished", "mainEntity", "citation"]
+          types: [industry === "E-COMMERCE" ? "Product" : "Service", "TechArticle", "FAQPage"],
+          requiredFields: ["headline", "author", "datePublished", "mainEntity"]
         },
         competitive: {
-          strategy: isContent ? "Refining Semantic Signals" : "Aggressive Entity Expansion",
-          differentiation: "Proprietary Data Integration & First-Person Experience Signals",
-          gapExploit: "Targeting Underserved Long-Tail AI Queries"
+          strategy: `Reverse Engineering ${industry} Leaders`,
+          differentiation: `Proprietary ${industry} Data Integration`,
+          gapExploit: `Targeting Underserved ${industry} AI Queries`
         }
       };
       
@@ -182,23 +203,29 @@ const SEOTool = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-800 bg-indigo-600/10">
-            <CardContent className="py-4">
-              <div className="flex items-center gap-3">
-                {loading ? (
-                  <RefreshCw className="h-4 w-4 text-indigo-400 animate-spin" />
-                ) : (
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                )}
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-white uppercase">Engine_Status</p>
-                  <p className="text-[9px] text-slate-400">
-                    {loading ? "RECALCULATING_STRATEGY..." : "STRATEGY_SYNCHRONIZED"}
-                  </p>
+          {result && (
+            <Card className="border-indigo-500/30 bg-indigo-500/10 animate-in fade-in slide-in-from-right-4">
+              <CardHeader className="py-2 border-b border-indigo-500/20">
+                <CardTitle className="text-[10px] uppercase text-indigo-400 flex items-center gap-2">
+                  <Target className="h-3 w-3" /> Context_Identified
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="py-3 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] text-slate-500">INDUSTRY</span>
+                  <span className="text-[10px] font-bold text-white">{result.identification.industry}</span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] text-slate-500">TYPE</span>
+                  <span className="text-[10px] font-bold text-white">{result.identification.siteType}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] text-slate-500">CONFIDENCE</span>
+                  <span className="text-[10px] font-bold text-emerald-500">{result.identification.confidenceScore}%</span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 
