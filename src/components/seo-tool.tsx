@@ -55,53 +55,54 @@ const SEOTool = () => {
     const isContent = trimmedInput.split(/\s+/).length > 50;
     const isTopic = !isURL && !isKeyword && !isContent;
 
-    // SIMULATING DETERMINISTIC GENERATION
+    // SIMULATING DETERMINISTIC GENERATION WITH 2026-SPECIFIC DATA
     setTimeout(() => {
+      const cleanInput = trimmedInput.slice(0, 30).replace(/[^\w\s]/gi, '');
       const output = {
         queryAnalysis: {
-          primaryIntent: isContent ? "CONTENT_OPTIMIZATION" : isURL ? "COMPETITOR_REVERSE_ENGINEERING" : isKeyword ? "TRANSACTIONAL_EXPANSION" : "TOPICAL_AUTHORITY_ESTABLISHMENT",
-          secondaryIntents: ["SEMANTIC_CLUSTERING", "AI_CITATION_CAPTURE"],
-          targetAudience: "HIGH_INTENT_DECISION_MAKERS",
-          contentType: isContent ? "EDITORIAL_REFINEMENT" : isURL ? "COMPETITIVE_GAP_REPORT" : isKeyword ? "PILLAR_PAGE" : "TECHNICAL_CASE_STUDY"
+          primaryIntent: isContent ? "SEMANTIC_REINFORCEMENT" : isURL ? "REVERSE_ENTITY_MAPPING" : isKeyword ? "ZERO_CLICK_CAPTURE" : "TOPICAL_AUTHORITY_ESTABLISHMENT",
+          secondaryIntents: ["LLM_CONTEXT_INJECTION", "SGE_VISIBILITY_OPTIMIZATION"],
+          targetAudience: "AI_AGENT_PARSERS & HIGH_VALUE_HUMAN_USERS",
+          contentType: isContent ? "SEMANTIC_PILLAR_REFINEMENT" : isURL ? "COMPETITIVE_GAP_EXPLOIT" : isKeyword ? "DIRECT_ANSWER_BLOCK" : "TECHNICAL_AUTHORITY_GUIDE"
         },
         aiStrategy: {
-          coreEntities: [trimmedInput.split(" ")[0].toUpperCase(), "ARTIFICIAL_INTELLIGENCE", "SEARCH_OPTIMIZATION"],
-          supportingEntities: ["LLM_CONTEXT_WINDOW", "SEMANTIC_ENTITIES", "ZERO_CLICK_RESULTS"],
-          gaps: ["REAL_TIME_VERIFICATION", "FIRST_PERSON_EXPERIENCE_SIGNALS"],
-          positioning: `ESTABLISH_${trimmedInput.slice(0, 20).toUpperCase().replace(/\s+/g, '_')}_AS_PRIMARY_SEMANTIC_HUB`
+          coreEntities: [cleanInput.toUpperCase(), "SEMANTIC_SEARCH", "LLM_OPTIMIZATION", "KNOWLEDGE_GRAPH"],
+          supportingEntities: ["CONTEXTUAL_RELEVANCE", "ENTITY_RELATIONSHIP_MAPPING", "RAG_SYSTEM_COMPATIBILITY"],
+          gaps: ["FIRST_PERSON_VERIFICATION", "REAL_TIME_DATA_CITATIONS", "PROPRIETARY_INSIGHT_DENSITY"],
+          positioning: `ESTABLISH_${cleanInput.toUpperCase().replace(/\s+/g, '_')}_AS_PRIMARY_KNOWLEDGE_NODE`
         },
         keywordClusters: {
-          primary: isContent ? "EXTRACTED_FROM_BODY" : trimmedInput,
-          secondary: [`FUTURE_OF_TOPIC`, `AI_TRENDS_2026`, `BEST_PRACTICES`],
-          longTail: [`HOW_TO_OPTIMIZE_FOR_LLMS`, `IMPACT_OF_AI_ON_STRATEGY`],
-          questions: [`WHAT_IS_THE_CORE_VALUE?`, `WHY_DOES_THIS_MATTER_IN_2026?`]
+          primary: cleanInput,
+          secondary: [`${cleanInput} AI Search Trends`, `Semantic Optimization for ${cleanInput}`, `Future of ${cleanInput} 2026`],
+          longTail: [`How to optimize ${cleanInput} for LLM citations`, `Impact of SGE on ${cleanInput} visibility`, `Best practices for ${cleanInput} entity mapping`],
+          questions: [`What is the future of ${cleanInput}?`, `How does AI impact ${cleanInput} strategy?`, `Why is ${cleanInput} critical for 2026 search?`]
         },
         contentStructure: {
-          h1: isContent ? "EXISTING_H1_DETECTED" : `THE_DEFINITIVE_GUIDE_TO_${trimmedInput.slice(0, 30).toUpperCase()}_IN_2026`,
-          h2: ["EXECUTIVE_SUMMARY", "SEMANTIC_FOUNDATIONS", "IMPLEMENTATION_FRAMEWORK"],
-          h3: ["LLM_PARSING_OPTIMIZATION", "ENTITY_RELATIONSHIP_MAPPING"],
-          faq: { enabled: true, items: ["ROI_METRICS", "IMPLEMENTATION_TIMELINE"] }
+          h1: isContent ? "EXISTING_H1_DETECTED" : `The Definitive 2026 Guide to ${cleanInput}`,
+          h2: ["Executive Summary: The AI Search Shift", "Core Semantic Foundations", "Implementation Framework for LLM Visibility"],
+          h3: ["Optimizing for Contextual Recall", "Entity-Based Relationship Mapping", "Zero-Click Result Capture Strategies"],
+          faq: { enabled: true, items: ["ROI Benchmarks for 2026", "Technical Implementation Timeline"] }
         },
         metadata: {
-          title: `${trimmedInput.slice(0, 40).toUpperCase()} | 2026_AI_SEARCH`,
-          description: `DETERMINISTIC_STRATEGY_FOR_${trimmedInput.slice(0, 20).toUpperCase()}. OPTIMIZED_FOR_LLM_CITATION.`,
-          slug: trimmedInput.slice(0, 20).toLowerCase().replace(/\s+/g, "-"),
-          ogTitle: `DOMINATE_SEARCH_2026`,
-          ogDescription: `FUTURE_PROOF_STRATEGY_GENERATED_IN_REAL_TIME`
+          title: `${cleanInput} | 2026 AI Search & Semantic Strategy`,
+          description: `Master ${cleanInput} in the era of AI search. Optimized for LLM citations, SGE visibility, and high-intent user capture.`,
+          slug: cleanInput.toLowerCase().replace(/\s+/g, "-"),
+          ogTitle: `Dominate ${cleanInput} Search in 2026`,
+          ogDescription: `Advanced semantic strategy for ${cleanInput} optimized for the next generation of search engines.`
         },
         aiCitation: {
-          statements: [`CONTENT_IS_PRIMARY_DRIVER_OF_2026_GROWTH.`, `SEMANTIC_DENSITY_IMPROVES_LLM_RECALL.`],
-          facts: ["92%_USER_PREFERENCE_FOR_AI_SUMMARIES", "4X_CITATION_RATE_INCREASE_VIA_ENTITIES"],
-          targets: ["GOOGLE_AI_OVERVIEW", "PERPLEXITY_CITATION_BLOCK", "CHATGPT_SEARCH_INDEX"]
+          statements: [`${cleanInput} is the primary catalyst for semantic growth in 2026.`, `High entity density in ${cleanInput} content improves LLM recall by 40%.`],
+          facts: ["94% of users prefer AI-synthesized summaries for complex queries", "Entity-linked content sees 3.5x higher citation rates in Perplexity"],
+          targets: ["Google AI Overviews", "Perplexity Citation Blocks", "Gemini Search Index", "ChatGPT Search"]
         },
         schema: {
-          types: ["TechArticle", "FAQPage", "Service"],
-          requiredFields: ["headline", "author", "datePublished", "mainEntity"]
+          types: ["TechArticle", "FAQPage", "Dataset", "Service"],
+          requiredFields: ["headline", "author", "datePublished", "mainEntity", "citation"]
         },
         competitive: {
-          strategy: isContent ? "REFINING_EXISTING_SEMANTIC_SIGNALS" : "AGGRESSIVE_ENTITY_EXPANSION",
-          differentiation: "PROPRIETARY_DATA_INTEGRATION",
-          gapExploit: "TARGETING_ZERO_CLICK_SUMMARIES"
+          strategy: isContent ? "Refining Semantic Signals" : "Aggressive Entity Expansion",
+          differentiation: "Proprietary Data Integration & First-Person Experience Signals",
+          gapExploit: "Targeting Underserved Long-Tail AI Queries"
         }
       };
       
@@ -117,7 +118,7 @@ const SEOTool = () => {
     if (input.trim().length >= 3) {
       debounceTimer.current = setTimeout(() => {
         executeEngine(input);
-      }, 500); // 500ms for snappy real-time feel
+      }, 500);
     }
 
     return () => {
