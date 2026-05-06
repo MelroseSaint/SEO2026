@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import { CopyButton } from "@/components/seo-copy-button";
 import SEOTool from "@/components/seo-tool";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -108,8 +108,7 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            SEO Discovery Engine 2026
-          </h1>
+            SEO Discovery Engine 2026          </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Transform your app or website description into powerful SEO that helps you rank higher on Google, Bing, and Yahoo.
           </p>
@@ -124,16 +123,14 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
             <p className="text-gray-400 mb-6">
               Tell us what your app or site does, who it's for, and what makes it special. We'll generate optimized SEO to help people discover you.
             </p>
-            
-            <textarea
+                        <textarea
               value={appDescription}
               onChange={(e) => setAppDescription(e.target.value)}
               placeholder="Example: A modern task management app that helps remote teams collaborate efficiently with AI-powered suggestions and real-time updates..."
               className="w-full p-4 rounded-xl bg-gray-900 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg resize-none"
               rows={6}
             />
-            
-            <button
+                        <button
               onClick={analyzeDescription}
               className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium text-lg shadow-lg hover:shadow-blue-500/25"
             >
@@ -158,8 +155,11 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
                 <p className="text-gray-300 text-sm mb-2">
                   This appears in search results as the clickable headline
                 </p>
-                <div className="bg-gray-900 p-4 rounded-lg border border-gray-700">
-                  <code className="text-blue-300 text-sm">{generatedSEO.title}</code>
+                <div className="flex items-center">
+                  <div className="flex-1 bg-gray-900 p-4 rounded-lg border border-gray-700 overflow-x-auto">
+                    <code className="text-blue-300 text-sm">{generatedSEO.title}</code>
+                  </div>
+                  <CopyButton text={generatedSEO.title} />
                 </div>
               </div>
 
@@ -171,8 +171,11 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
                 <p className="text-gray-300 text-sm mb-2">
                   The summary that appears below your title in search results
                 </p>
-                <div className="bg-gray-900 p-4 rounded-lg border border-gray-700">
-                  <p className="text-gray-300 text-sm">{generatedSEO.metaDescription}</p>
+                <div className="flex items-center">
+                  <div className="flex-1 bg-gray-900 p-4 rounded-lg border border-gray-700 overflow-x-auto">
+                    <p className="text-gray-300 text-sm">{generatedSEO.metaDescription}</p>
+                  </div>
+                  <CopyButton text={generatedSEO.metaDescription} />
                 </div>
               </div>
 
