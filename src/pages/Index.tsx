@@ -3,6 +3,8 @@ import { CopyButton } from "@/components/seo-copy-button";
 import SEOTool from "@/components/seo-tool";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/ui/theme-toggle";
+import CopyAllSEOButton from "@/components/ui/copy-all-seo-button";
 
 const Index = () => {
   const [appDescription, setAppDescription] = useState("");
@@ -105,6 +107,13 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+      <div className="relative">
+        {/* Dark mode toggle in top right */}
+        <div className="absolute top-4 right-4 flex items-center space-x-2">
+          <ThemeToggle />
+        </div>
+      </div>
+      
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
@@ -145,13 +154,11 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
             <h2 className="text-2xl font-semibold mb-6 text-blue-400 text-center">
               Your Optimized SEO Elements
             </h2>
-            
-            <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid md:grid-cols-2 gap-6">
               {/* Title Tag */}
               <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700">
                 <h3 className="text-lg font-semibold mb-3 text-green-400">
-                  SEO Title Tag
-                </h3>
+                  SEO Title Tag                </h3>
                 <p className="text-gray-300 text-sm mb-2">
                   This appears in search results as the clickable headline
                 </p>
@@ -189,8 +196,7 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {generatedSEO.keywords.map((kw, i) => (
-                    <span
-                      key={i}
+                    <span                      key={i}
                       className="px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-full text-blue-300 text-sm"
                     >
                       {kw}
@@ -206,8 +212,7 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
                 Suggested Homepage Content
               </h3>
               <p className="text-gray-400 text-sm mb-4">
-                Use this content structure for your homepage to improve search rankings
-              </p>
+                Use this content structure for your homepage to improve search rankings              </p>
               <div className="bg-gray-900 p-6 rounded-lg border border-gray-700">
                 <div className="prose prose-invert prose-blue max-w-none">
                   <pre className="text-gray-300 text-sm whitespace-pre-wrap font-sans">
@@ -216,15 +221,20 @@ Join thousands of satisfied users who trust our platform for their ${primaryCate
                 </div>
               </div>
             </div>
+
+            {/* Copy All SEO Button */}
+            <div className="mt-6 flex justify-center">
+              <CopyAllSEOButton 
+                title={generatedSEO.title} 
+                metaDescription={generatedSEO.metaDescription} 
+                keywords={generatedSEO.keywords} 
+              />
+            </div>
           </div>
         )}
 
         {/* Existing SEO Tool */}
         <SEOTool />
-        
-        <div className="mt-8">
-          <MadeWithDyad />
-        </div>
       </div>
     </div>
   );
