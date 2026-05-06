@@ -1,13 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Sparkles, Globe, Hash, FileText, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, LayoutDashboard, BrainCircuit, Map, Fingerprint, Code2, Users, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { showSuccess, showError } from "@/utils/toast";
+
+// New Feature Components
+import AISimulation from "./ai-simulation";
+import IntentMapping from "./intent-mapping";
+import EntityOptimization from "./entity-optimization";
+import SchemaBuilder from "./schema-builder";
+import CompetitorAnalysis from "./competitor-analysis";
 import CopyButton from "./seo-copy-button";
 import { CopyAllSEOButton } from "./ui/copy-all-seo-button";
-import { showSuccess, showError } from "@/utils/toast";
 
 interface SEOResult {
   title: string;
@@ -56,7 +64,7 @@ const SEOTool = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto">
       <Card className="border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden transition-colors">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 dark:from-indigo-500/10 dark:to-purple-500/10 pointer-events-none" />
         <CardHeader className="relative">
@@ -96,87 +104,72 @@ const SEOTool = () => {
       </Card>
 
       {result && (
-        <div className="grid gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Globe className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-              Generated Metadata
-            </h3>
-            <CopyAllSEOButton data={result} />
-          </div>
+        <Tabs defaultValue="overview" className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <TabsList className="w-full flex flex-wrap h-auto bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-1 rounded-xl mb-8">
+            <TabsTrigger value="overview" className="flex-1 gap-2 py-3"><LayoutDashboard className="h-4 w-4" /> Overview</TabsTrigger>
+            <TabsTrigger value="simulation" className="flex-1 gap-2 py-3"><BrainCircuit className="h-4 w-4" /> AI Simulation</TabsTrigger>
+            <TabsTrigger value="intent" className="flex-1 gap-2 py-3"><Map className="h-4 w-4" /> Intent</TabsTrigger>
+            <TabsTrigger value="entities" className="flex-1 gap-2 py-3"><Fingerprint className="h-4 w-4" /> Entities</TabsTrigger>
+            <TabsTrigger value="schema" className="flex-1 gap-2 py-3"><Code2 className="h-4 w-4" /> Schema</TabsTrigger>
+            <TabsTrigger value="competitors" className="flex-1 gap-2 py-3"><Users className="h-4 w-4" /> Competitors</TabsTrigger>
+          </TabsList>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400 flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    SEO Title
-                  </CardTitle>
+          <TabsContent value="overview" className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Metadata Strategy</h3>
+              <CopyAllSEOButton data={result} />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400">SEO Title</CardTitle>
                   <CopyButton text={result.title}>Copy</CopyButton>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white">{result.title}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400 flex items-center gap-2">
-                    <Hash className="h-4 w-4" />
-                    Keywords
-                  </CardTitle>
+                </CardHeader>
+                <CardContent><p className="text-lg font-semibold">{result.title}</p></CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400">Keywords</CardTitle>
                   <CopyButton text={result.keywords.join(", ")}>Copy</CopyButton>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {result.keywords.map((kw, i) => (
-                    <span key={i} className="px-2 py-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs border border-indigo-500/20">
-                      {kw}
-                    </span>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 md:col-span-2">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400 flex items-center gap-2">
-                    <Search className="h-4 w-4" />
-                    Meta Description
-                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {result.keywords.map((kw, i) => (
+                      <span key={i} className="px-2 py-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs border border-indigo-500/20">{kw}</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 md:col-span-2">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400">Meta Description</CardTitle>
                   <CopyButton text={result.description}>Copy</CopyButton>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-700 dark:text-gray-300 leading-relaxed">{result.description}</p>
-              </CardContent>
-            </Card>
-          </div>
+                </CardHeader>
+                <CardContent><p className="text-slate-700 dark:text-gray-300 leading-relaxed">{result.description}</p></CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-          <Card className="bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-500/20">
-            <CardHeader>
-              <CardTitle className="text-lg font-bold text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                2026 Content Suggestions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {result.suggestions.map((s, i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-700 dark:text-gray-300">
-                    <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
+          <TabsContent value="simulation">
+            <AISimulation input={input} />
+          </TabsContent>
+
+          <TabsContent value="intent">
+            <IntentMapping input={input} />
+          </TabsContent>
+
+          <TabsContent value="entities">
+            <EntityOptimization />
+          </TabsContent>
+
+          <TabsContent value="schema">
+            <SchemaBuilder />
+          </TabsContent>
+
+          <TabsContent value="competitors">
+            <CompetitorAnalysis />
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   );
