@@ -1,23 +1,41 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Copy, Check } from "lucide-react";
 import { useState } from "react";
+import { showSuccess } from "@/utils/toast";
 
-const CopyAllSEOButton = ({ title, metaDescription, keywords }: { title: string; metaDescription: string; keywords: string[] }) => {
+interface SEOData {
+  title: string;
+  description: string;
+  keywords: string[];
+}
+
+export const CopyAllSEOButton = ({ data }: { data: SEOData }) => {
   const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    const text = `${title}\n\n${metaDescription}\n\nKeywords: ${keywords.join(", ")}`;
-    navigator.clipboard.writeText(text).then(() => setCopied(true));
-    setTimeout(() => setCopied(false), 2000);
+
+  const handleCopyAll = () => {
+    const text = `
+SEO Title: ${data.title}
+Meta Description: ${data.description}
+Keywords: ${data.keywords.join(", ")}
+    `.trim();
+
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      showSuccess("All SEO data copied to clipboard!");
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
-  
+
   return (
-    <button      onClick={handleCopy}
-      className="px-4 py-2 rounded bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
-      {...(copied ? { "aria-label": "Copied!" } : {})}
+    <Button 
+      onClick={handleCopyAll}
+      variant="outline"
+      className="w-full sm:w-auto gap-2 border-indigo-500/30 hover:bg-indigo-500/10 text-indigo-400"
     >
-      {copied ? "Copied!" : "Copy All SEO"}
-    </button>
+      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+      {copied ? "Copied All!" : "Copy All Metadata"}
+    </Button>
   );
 };
-
-export default CopyAllSEOButton;
