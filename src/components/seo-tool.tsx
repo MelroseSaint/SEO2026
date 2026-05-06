@@ -29,7 +29,6 @@ const SEOTool = () => {
 
     setLoading(true);
     
-    // Simulating AI generation logic for 2026 SEO trends
     setTimeout(() => {
       const mockResult: SEOResult = {
         title: `${input.split(' ').slice(0, 3).join(' ')} | Next-Gen SEO Solutions 2026`,
@@ -58,28 +57,28 @@ const SEOTool = () => {
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
-      <Card className="border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-purple-500/10 pointer-events-none" />
+      <Card className="border-slate-200 dark:border-white/10 bg-white dark:bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden transition-colors">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 dark:from-indigo-500/10 dark:to-purple-500/10 pointer-events-none" />
         <CardHeader className="relative">
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-indigo-400" />
+          <CardTitle className="text-2xl font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+            <Sparkles className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
             SEO Discovery Engine
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-slate-500 dark:text-gray-400">
             Describe your project to generate a 2026-ready SEO strategy.
           </CardDescription>
         </CardHeader>
         <CardContent className="relative space-y-4">
           <Textarea
             placeholder="e.g., A sustainable fashion marketplace for Gen Z using blockchain for transparency..."
-            className="min-h-[120px] bg-white/5 border-white/10 focus:border-indigo-500/50 transition-all text-lg"
+            className="min-h-[120px] bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 focus:border-indigo-500/50 transition-all text-lg text-slate-900 dark:text-white"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
           <Button 
             onClick={generateSEO} 
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-lg font-semibold group"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-lg font-semibold group shadow-lg shadow-indigo-500/20"
           >
             {loading ? (
               <div className="flex items-center gap-2">
@@ -99,18 +98,18 @@ const SEOTool = () => {
       {result && (
         <div className="grid gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <Globe className="h-5 w-5 text-indigo-400" />
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Globe className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
               Generated Metadata
             </h3>
             <CopyAllSEOButton data={result} />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
+                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400 flex items-center gap-2">
                     <FileText className="h-4 w-4" />
                     SEO Title
                   </CardTitle>
@@ -118,14 +117,14 @@ const SEOTool = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-lg font-semibold text-white">{result.title}</p>
+                <p className="text-lg font-semibold text-slate-900 dark:text-white">{result.title}</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
+                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400 flex items-center gap-2">
                     <Hash className="h-4 w-4" />
                     Keywords
                   </CardTitle>
@@ -135,7 +134,7 @@ const SEOTool = () => {
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {result.keywords.map((kw, i) => (
-                    <span key={i} className="px-2 py-1 rounded-md bg-indigo-500/10 text-indigo-300 text-xs border border-indigo-500/20">
+                    <span key={i} className="px-2 py-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs border border-indigo-500/20">
                       {kw}
                     </span>
                   ))}
@@ -143,10 +142,10 @@ const SEOTool = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border-white/10 md:col-span-2">
+            <Card className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 md:col-span-2">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-sm font-medium text-gray-400 flex items-center gap-2">
+                  <CardTitle className="text-sm font-medium text-slate-500 dark:text-gray-400 flex items-center gap-2">
                     <Search className="h-4 w-4" />
                     Meta Description
                   </CardTitle>
@@ -154,14 +153,14 @@ const SEOTool = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-300 leading-relaxed">{result.description}</p>
+                <p className="text-slate-700 dark:text-gray-300 leading-relaxed">{result.description}</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card className="bg-indigo-950/20 border-indigo-500/20">
+          <Card className="bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-500/20">
             <CardHeader>
-              <CardTitle className="text-lg font-bold text-indigo-300 flex items-center gap-2">
+              <CardTitle className="text-lg font-bold text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
                 2026 Content Suggestions
               </CardTitle>
@@ -169,7 +168,7 @@ const SEOTool = () => {
             <CardContent>
               <ul className="space-y-3">
                 {result.suggestions.map((s, i) => (
-                  <li key={i} className="flex items-start gap-3 text-gray-300">
+                  <li key={i} className="flex items-start gap-3 text-slate-700 dark:text-gray-300">
                     <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 mt-2 shrink-0" />
                     {s}
                   </li>

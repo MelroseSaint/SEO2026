@@ -17,14 +17,14 @@ export function ThemeToggle() {
   if (!mounted) return null;
 
   return (
-    <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded-full">
-      <Sun className="h-4 w-4 text-yellow-500" />
+    <div className="flex items-center space-x-2 bg-slate-100 dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-full transition-colors">
+      <Sun className={`h-4 w-4 transition-colors ${theme === 'light' ? 'text-yellow-500' : 'text-slate-400'}`} />
       <Switch
         id="theme-mode"
         checked={theme === "dark"}
         onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
       />
-      <Moon className="h-4 w-4 text-indigo-400" />
+      <Moon className={`h-4 w-4 transition-colors ${theme === 'dark' ? 'text-indigo-400' : 'text-slate-400'}`} />
       <Label htmlFor="theme-mode" className="sr-only">Toggle theme</Label>
     </div>
   );
