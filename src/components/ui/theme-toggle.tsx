@@ -3,29 +3,21 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex items-center space-x-2 bg-slate-100 dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-full transition-colors">
-      <Sun className={`h-4 w-4 transition-colors ${theme === 'light' ? 'text-yellow-500' : 'text-slate-400'}`} />
-      <Switch
-        id="theme-mode"
-        checked={theme === "dark"}
-        onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-      />
-      <Moon className={`h-4 w-4 transition-colors ${theme === 'dark' ? 'text-indigo-400' : 'text-slate-400'}`} />
-      <Label htmlFor="theme-mode" className="sr-only">Toggle theme</Label>
-    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="rounded-full w-10 h-10 border border-slate-200 dark:border-white/10"
+    >
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   );
 }

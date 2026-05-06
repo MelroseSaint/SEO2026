@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
   Sparkles, ArrowRight, LayoutDashboard, BrainCircuit, Map, 
   Fingerprint, Code2, Users, ListTree, ArrowRightLeft, 
-  RefreshCw, Wand2, Share2 
+  RefreshCw, Wand2, Share2, ShieldCheck 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,6 +23,7 @@ import GapAnalyzer from "./gap-analyzer";
 import RefreshIntelligence from "./refresh-intelligence";
 import PromptGenerator from "./prompt-generator";
 import LinkingGraph from "./linking-graph";
+import AICredibility from "./ai-credibility";
 import CopyButton from "./seo-copy-button";
 import { CopyAllSEOButton } from "./ui/copy-all-seo-button";
 
@@ -116,6 +117,7 @@ const SEOTool = () => {
         <Tabs defaultValue="overview" className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
           <TabsList className="w-full flex flex-wrap h-auto bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-1 rounded-xl mb-8">
             <TabsTrigger value="overview" className="flex-1 gap-2 py-3"><LayoutDashboard className="h-4 w-4" /> Overview</TabsTrigger>
+            <TabsTrigger value="credibility" className="flex-1 gap-2 py-3"><ShieldCheck className="h-4 w-4" /> Credibility</TabsTrigger>
             <TabsTrigger value="simulation" className="flex-1 gap-2 py-3"><BrainCircuit className="h-4 w-4" /> AI Simulation</TabsTrigger>
             <TabsTrigger value="intent" className="flex-1 gap-2 py-3"><Map className="h-4 w-4" /> Intent</TabsTrigger>
             <TabsTrigger value="structure" className="flex-1 gap-2 py-3"><ListTree className="h-4 w-4" /> Structure</TabsTrigger>
@@ -162,6 +164,10 @@ const SEOTool = () => {
                 <CardContent><p className="text-slate-700 dark:text-gray-300 leading-relaxed">{result.description}</p></CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="credibility">
+            <AICredibility />
           </TabsContent>
 
           <TabsContent value="simulation">
