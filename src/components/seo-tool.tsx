@@ -1,19 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, ArrowRight, LayoutDashboard, BrainCircuit, Map, Fingerprint, Code2, Users, RefreshCw } from "lucide-react";
+import { 
+  Sparkles, ArrowRight, LayoutDashboard, BrainCircuit, Map, 
+  Fingerprint, Code2, Users, ListTree, ArrowRightLeft, 
+  RefreshCw, Wand2, Share2 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { showSuccess, showError } from "@/utils/toast";
 
-// New Feature Components
+// Feature Components
 import AISimulation from "./ai-simulation";
 import IntentMapping from "./intent-mapping";
 import EntityOptimization from "./entity-optimization";
 import SchemaBuilder from "./schema-builder";
 import CompetitorAnalysis from "./competitor-analysis";
+import ContentStructure from "./content-structure";
+import GapAnalyzer from "./gap-analyzer";
+import RefreshIntelligence from "./refresh-intelligence";
+import PromptGenerator from "./prompt-generator";
+import LinkingGraph from "./linking-graph";
 import CopyButton from "./seo-copy-button";
 import { CopyAllSEOButton } from "./ui/copy-all-seo-button";
 
@@ -109,8 +118,13 @@ const SEOTool = () => {
             <TabsTrigger value="overview" className="flex-1 gap-2 py-3"><LayoutDashboard className="h-4 w-4" /> Overview</TabsTrigger>
             <TabsTrigger value="simulation" className="flex-1 gap-2 py-3"><BrainCircuit className="h-4 w-4" /> AI Simulation</TabsTrigger>
             <TabsTrigger value="intent" className="flex-1 gap-2 py-3"><Map className="h-4 w-4" /> Intent</TabsTrigger>
+            <TabsTrigger value="structure" className="flex-1 gap-2 py-3"><ListTree className="h-4 w-4" /> Structure</TabsTrigger>
             <TabsTrigger value="entities" className="flex-1 gap-2 py-3"><Fingerprint className="h-4 w-4" /> Entities</TabsTrigger>
+            <TabsTrigger value="gap" className="flex-1 gap-2 py-3"><ArrowRightLeft className="h-4 w-4" /> Gap Analysis</TabsTrigger>
+            <TabsTrigger value="refresh" className="flex-1 gap-2 py-3"><RefreshCw className="h-4 w-4" /> Refresh</TabsTrigger>
+            <TabsTrigger value="generator" className="flex-1 gap-2 py-3"><Wand2 className="h-4 w-4" /> Generator</TabsTrigger>
             <TabsTrigger value="schema" className="flex-1 gap-2 py-3"><Code2 className="h-4 w-4" /> Schema</TabsTrigger>
+            <TabsTrigger value="graph" className="flex-1 gap-2 py-3"><Share2 className="h-4 w-4" /> Graph</TabsTrigger>
             <TabsTrigger value="competitors" className="flex-1 gap-2 py-3"><Users className="h-4 w-4" /> Competitors</TabsTrigger>
           </TabsList>
 
@@ -158,12 +172,32 @@ const SEOTool = () => {
             <IntentMapping input={input} />
           </TabsContent>
 
+          <TabsContent value="structure">
+            <ContentStructure input={input} />
+          </TabsContent>
+
           <TabsContent value="entities">
             <EntityOptimization />
           </TabsContent>
 
+          <TabsContent value="gap">
+            <GapAnalyzer />
+          </TabsContent>
+
+          <TabsContent value="refresh">
+            <RefreshIntelligence />
+          </TabsContent>
+
+          <TabsContent value="generator">
+            <PromptGenerator />
+          </TabsContent>
+
           <TabsContent value="schema">
             <SchemaBuilder />
+          </TabsContent>
+
+          <TabsContent value="graph">
+            <LinkingGraph />
           </TabsContent>
 
           <TabsContent value="competitors">
