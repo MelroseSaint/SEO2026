@@ -57,8 +57,7 @@ const SEOTool: React.FC<SEOToolProps> = ({ initialKeyword = "" }) => {
     if (!content || !results.serpData.length) return;
 
     const serpKeywords = results.serpData
-      .flatMap((result) => result.snippet.split(/\s+/))
-      .map((w) => w.toLowerCase());
+      .flatMap((result) => result.snippet.split(/\s+/).map((w) => w.toLowerCase()));
 
     const optimized = content
       .split(/\s+/)
@@ -98,8 +97,7 @@ const SEOTool: React.FC<SEOToolProps> = ({ initialKeyword = "" }) => {
             onClick={fetchKeywordData}
             className="mt-3 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
-            Search Keywords
-          </button>
+            Search Keywords          </button>
         </div>
 
         {/* Related keywords */}
@@ -166,8 +164,7 @@ const SEOTool: React.FC<SEOToolProps> = ({ initialKeyword = "" }) => {
             placeholder="Paste your content here to optimize for target keywords..."
             rows={10}
           />
-          <button
-            onClick={analyzeContent}
+          <button            onClick={analyzeContent}
             className="mt-3 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
             Optimize Content
