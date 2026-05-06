@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,16 +28,14 @@ const SEOTool = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const executeEngine = () => {
+  const executeEngine = (val: string) => {
     setError(null);
-    const trimmedInput = input.trim();
+    const trimmedInput = val.trim();
 
     // FAILURE CONDITION: Empty Input
     if (!trimmedInput) {
-      const reason = "INVALID INPUT FOR STRUCTURED PROCESSING: Input is empty.";
-      setError(reason);
-      showError(reason);
       return;
     }
 
@@ -45,7 +43,6 @@ const SEOTool = () => {
     if (trimmedInput.length < 3) {
       const reason = "INVALID INPUT FOR STRUCTURED PROCESSING: Input length insufficient for semantic analysis.";
       setError(reason);
-      showError(reason);
       return;
     }
 
@@ -108,9 +105,26 @@ const SEOTool = () => {
       
       setResult(output);
       setLoading(false);
-      showSuccess("DETERMINISTIC_STRATEGY_GENERATED");
-    }, 1200);
+      showSuccess("DETERMINISTIC_STRATEGY_AUTO_GENERATED");
+    }, 1000);
   };
+
+  // Auto-trigger logic
+  useEffect(() => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    if (input.trim().length >= 3) {
+      debounceTimer.current = setTimeout(() => {
+        executeEngine(input);
+      }, 800); // 800ms delay after typing stops
+    }
+
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, [input]);
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto font-mono">
@@ -123,7 +137,7 @@ const SEOTool = () => {
                 DOMINATE_SEARCH_2026_ENGINE
               </CardTitle>
               <CardDescription className="text-slate-500 text-xs">
-                MODE: DETERMINISTIC_STRATEGY_GENERATOR | STATUS: {loading ? "PROCESSING" : "READY"}
+                MODE: DETERMINISTIC_AUTO_GENERATOR | STATUS: {loading ? "PROCESSING" : "LISTENING"}
               </CardDescription>
             </div>
             <div className={`h-2 w-2 rounded-full ${loading ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'} shadow-[0_0_10px_rgba(16,185,129,0.5)]`} />
@@ -131,18 +145,18 @@ const SEOTool = () => {
         </CardHeader>
         <CardContent className="pt-6 space-y-4">
           <Textarea
-            placeholder="INPUT_KEYWORD | INPUT_TOPIC | INPUT_URL"
+            placeholder="INPUT_KEYWORD | INPUT_TOPIC | INPUT_URL (AUTO-EXECUTE ENABLED)"
             className="min-h-[100px] bg-black border-slate-800 text-indigo-300 focus:ring-indigo-500/20 transition-all placeholder:text-slate-700"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <Button 
-            onClick={executeEngine} 
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 font-bold tracking-widest uppercase rounded-none"
-          >
-            {loading ? "EXECUTING_ANALYSIS..." : "EXECUTE_STRATEGY_GENERATION"}
-          </Button>
+          
+          {loading && (
+            <div className="flex items-center justify-center gap-2 text-indigo-400 text-xs animate-pulse py-2">
+              <RefreshCw className="h-3 w-3 animate-spin" />
+              EXECUTING_DETERMINISTIC_ANALYSIS...
+            </div>
+          )}
           
           {error && (
             <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold">
