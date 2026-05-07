@@ -27,7 +27,6 @@ const AuthMonster = ({
   const eyeX = useSpring(mouseX, { stiffness: 150, damping: 15 });
   const eyeY = useSpring(mouseY, { stiffness: 150, damping: 15 });
 
-  // Glasses movement - slightly more exaggerated than eyes for depth
   const glassesX = useTransform(eyeX, (val) => val * 1.2);
   const glassesY = useTransform(eyeY, (val) => val * 1.1);
 
@@ -70,6 +69,42 @@ const AuthMonster = ({
 
   return (
     <div ref={containerRef} className="relative w-48 h-48 mx-auto mb-4 flex items-center justify-center">
+      {/* Ears/Horns - Placed behind body */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Left Ear */}
+        <motion.div
+          animate={{ 
+            rotate: isPasswordFocused ? -45 : (isTypingEmail || isHoveringSubmit ? [-25, -10, -25] : -15),
+            y: isPasswordFocused ? 15 : (isEmailValid ? -8 : 0),
+            x: isPasswordFocused ? 10 : 0,
+            scale: isEmailValid ? 1.2 : 1,
+          }}
+          transition={{ 
+            rotate: { duration: isHoveringSubmit ? 0.2 : 0.4, repeat: (isTypingEmail || isHoveringSubmit) && !isPasswordFocused ? Infinity : 0 },
+            type: "spring",
+            stiffness: 200
+          }}
+          className="absolute top-6 left-8 w-8 h-12 rounded-t-full origin-bottom"
+          style={{ backgroundColor: isEmailValid ? "#10b981" : (isPasswordFocused ? "#4f46e5" : "#1877F2") }}
+        />
+        {/* Right Ear */}
+        <motion.div
+          animate={{ 
+            rotate: isPasswordFocused ? 45 : (isTypingEmail || isHoveringSubmit ? [25, 10, 25] : 15),
+            y: isPasswordFocused ? 15 : (isEmailValid ? -8 : 0),
+            x: isPasswordFocused ? -10 : 0,
+            scale: isEmailValid ? 1.2 : 1,
+          }}
+          transition={{ 
+            rotate: { duration: isHoveringSubmit ? 0.2 : 0.4, repeat: (isTypingEmail || isHoveringSubmit) && !isPasswordFocused ? Infinity : 0 },
+            type: "spring",
+            stiffness: 200
+          }}
+          className="absolute top-6 right-8 w-8 h-12 rounded-t-full origin-bottom"
+          style={{ backgroundColor: isEmailValid ? "#10b981" : (isPasswordFocused ? "#4f46e5" : "#1877F2") }}
+        />
+      </div>
+
       {/* Monster Body */}
       <motion.div
         animate={{
@@ -85,7 +120,7 @@ const AuthMonster = ({
           type: "spring",
           stiffness: 200
         }}
-        className="relative w-32 h-32 rounded-[2.5rem] shadow-2xl shadow-blue-500/20 flex flex-col items-center justify-center overflow-hidden"
+        className="relative w-32 h-32 rounded-[2.5rem] shadow-2xl shadow-blue-500/20 flex flex-col items-center justify-center overflow-hidden z-10"
       >
         {/* Blushing */}
         <AnimatePresence>
@@ -186,28 +221,6 @@ const AuthMonster = ({
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Ears/Horns */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          animate={{ 
-            rotate: isTypingEmail || isHoveringSubmit ? [-8, 8, -8] : -12,
-            scale: isEmailValid ? 1.2 : 1,
-          }}
-          transition={{ duration: 0.3, repeat: (isTypingEmail || isHoveringSubmit) ? Infinity : 0 }}
-          className="absolute top-4 left-6 w-7 h-10 bg-inherit rounded-t-full"
-          style={{ backgroundColor: isEmailValid ? "#10b981" : (isPasswordFocused ? "#4f46e5" : "#1877F2") }}
-        />
-        <motion.div
-          animate={{ 
-            rotate: isTypingEmail || isHoveringSubmit ? [8, -8, 8] : 12,
-            scale: isEmailValid ? 1.2 : 1,
-          }}
-          transition={{ duration: 0.3, repeat: (isTypingEmail || isHoveringSubmit) ? Infinity : 0 }}
-          className="absolute top-4 right-6 w-7 h-10 bg-inherit rounded-t-full"
-          style={{ backgroundColor: isEmailValid ? "#10b981" : (isPasswordFocused ? "#4f46e5" : "#1877F2") }}
-        />
-      </div>
     </div>
   );
 };
