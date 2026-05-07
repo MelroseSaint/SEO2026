@@ -120,6 +120,7 @@ const SEOTool = () => {
   ];
 
   const isLocked = (itemId: string) => {
+    if (currentPlan === "enterprise") return false; // Enterprise unlocks everything
     const item = menuItems.find(m => m.id === itemId);
     if (!item) return true;
     return !item.tiers.includes(currentPlan);

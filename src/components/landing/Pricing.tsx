@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, Lock } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -32,7 +32,7 @@ export const plans = [
     price: "Custom",
     description: "Custom solutions for large-scale operations.",
     features: ["Custom LLM Training", "White-label Reports", "Dedicated Strategist", "SLA Guarantees"],
-    cta: "Contact Sales",
+    cta: "Activate Enterprise Demo",
     popular: false,
     modules: ["all"]
   }
@@ -40,18 +40,23 @@ export const plans = [
 
 const Pricing = () => {
   const handlePlanSelect = (plan: typeof plans[0]) => {
+    // Persist plan selection for the tool to read
+    localStorage.setItem("seo2026_plan", plan.id);
+    
     if (plan.id === "enterprise") {
-      toast.success("Request sent! Our sales team will contact you within 24 hours.");
+      toast.success("Enterprise Mode Activated", {
+        description: "All advanced modules are now unlocked for your session."
+      });
     } else {
-      // Persist plan selection for the tool to read
-      localStorage.setItem("seo2026_plan", plan.id);
-      toast.success(`Plan updated to ${plan.name}! The SEO Engine is now configured for your tier.`);
-      
-      // Scroll to tool to see changes
-      const toolElement = document.getElementById('tool');
-      if (toolElement) {
-        toolElement.scrollIntoView({ behavior: 'smooth' });
-      }
+      toast.success(`Plan updated to ${plan.name}!`, {
+        description: "The SEO Engine is now configured for your tier."
+      });
+    }
+    
+    // Scroll to tool to see changes
+    const toolElement = document.getElementById('tool');
+    if (toolElement) {
+      toolElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -109,14 +114,14 @@ const Pricing = () => {
 
               <Button 
                 onClick={() => handlePlanSelect(plan)}
-                disabled={currentPlanId === plan.id && plan.id !== "enterprise"}
+                disabled={currentPlanId === plan.id}
                 className={`w-full py-6 rounded-xl font-bold transition-all ${
                   plan.popular 
                     ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20" 
                     : "bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-900 dark:text-white"
                 }`}
               >
-                {currentPlanId === plan.id && plan.id !== "enterprise" ? "Active Plan" : plan.cta}
+                {currentPlanId === plan.id ? "Active Plan" : plan.cta}
               </Button>
             </div>
           ))}
