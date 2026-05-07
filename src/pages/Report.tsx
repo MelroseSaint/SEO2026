@@ -3,8 +3,8 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
-import { api } from "convex/_generated/api";
-import { Id } from "convex/_generated/dataModel";
+import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 import Navbar from "@/components/layout/Navbar";
 import DeterministicOutput from "@/components/deterministic-output";
 import { Loader2, ArrowLeft, Calendar, ShieldCheck, Sparkles } from "lucide-react";

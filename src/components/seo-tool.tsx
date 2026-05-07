@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { usePlan } from "@/context/PlanContext";
 import { useMutation } from "convex/react";
-import { api } from "convex/_generated/api";
+import { api } from "../../convex/_generated/api";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -195,7 +195,7 @@ const SEOTool = () => {
           <CardHeader className="py-3 border-b border-slate-100 dark:border-slate-800">
             <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2 font-bold">
               <Target className="h-3 w-3 text-blue-600" /> Context
-            </Target>
+            </CardTitle>
           </CardHeader>
           <CardContent className="py-4 space-y-3">
             <div className="flex justify-between items-center">
