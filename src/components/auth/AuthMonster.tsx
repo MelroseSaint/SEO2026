@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
 
 interface AuthMonsterProps {
@@ -8,9 +8,19 @@ interface AuthMonsterProps {
   emailValue: string;
   passwordLength: number;
   isEmailValid: boolean;
+  isHoveringSubmit: boolean;
 }
 
-const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailValid }: AuthMonsterProps) => {
+const AuthMonster = ({ 
+  isPasswordFocused, 
+  emailValue, 
+  passwordLength, 
+  isEmailValid,
+  isHoveringSubmit 
+}: AuthMonsterProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMouseNear, setIsMouseNear] = useState(false);
+  
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -18,13 +28,39 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
   const eyeY = useSpring(mouseY, { stiffness: 150, damping: 15 });
 
   useEffect(() => {
-    if (!isPasswordFocused) {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current || isPasswordFocused) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Calculate distance for "surprised" reaction
+      const dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
+      setIsMouseNear(dist < 100);
+
+      if (emailValue.length === 0) {
+        // Follow mouse if not typing
+        const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+        const distance = Math.min(dist / 10, 12);
+        mouseX.set(Math.cos(angle) * distance);
+        mouseY.set(Math.sin(angle) * distance);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [emailValue, isPasswordFocused, mouseX, mouseY]);
+
+  useEffect(() => {
+    if (isPasswordFocused) {
+      mouseX.set(0);
+      mouseY.set(10);
+    } else if (emailValue.length > 0) {
+      // Follow typing progress
       const offset = Math.min(emailValue.length * 1.5, 25) - 12.5;
       mouseX.set(offset);
       mouseY.set(0);
-    } else {
-      mouseX.set(0);
-      mouseY.set(10);
     }
   }, [emailValue, isPasswordFocused, mouseX, mouseY]);
 
@@ -32,16 +68,16 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
   const isPasswordShort = passwordLength > 0 && passwordLength < 8;
 
   return (
-    <div className="relative w-48 h-48 mx-auto mb-4 flex items-center justify-center">
+    <div ref={containerRef} className="relative w-48 h-48 mx-auto mb-4 flex items-center justify-center">
       {/* Monster Body */}
       <motion.div
         animate={{
-          y: isTypingEmail ? [0, -4, 0] : 0,
-          scale: isEmailValid && !isPasswordFocused ? 1.05 : 1,
+          y: isHoveringSubmit ? [0, -10, 0] : (isTypingEmail ? [0, -4, 0] : 0),
+          scale: isHoveringSubmit ? 1.1 : (isEmailValid && !isPasswordFocused ? 1.05 : (isMouseNear && !isPasswordFocused ? 1.1 : 1)),
           rotate: isPasswordFocused ? (isPasswordShort ? [0, -2, 2, 0] : 0) : 0,
         }}
         transition={{
-          y: { duration: 0.2, repeat: isTypingEmail ? Infinity : 0 },
+          y: { duration: isHoveringSubmit ? 0.4 : 0.2, repeat: (isHoveringSubmit || isTypingEmail) ? Infinity : 0 },
           rotate: { duration: 0.1, repeat: isPasswordShort ? Infinity : 0 },
           type: "spring",
           stiffness: 200
@@ -50,7 +86,7 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
       >
         {/* Blushing */}
         <AnimatePresence>
-          {emailValue.length > 15 && !isPasswordFocused && (
+          {(emailValue.length > 15 || isHoveringSubmit) && !isPasswordFocused && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
@@ -69,8 +105,8 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
             <motion.div
               key={i}
               animate={{
-                y: isPasswordFocused ? -2 : (isEmailValid ? -4 : 0),
-                rotate: isPasswordFocused ? (i === 0 ? 20 : -20) : 0,
+                y: isMouseNear && !isPasswordFocused ? -8 : (isPasswordFocused ? -2 : (isEmailValid || isHoveringSubmit ? -4 : 0)),
+                rotate: isPasswordFocused ? (i === 0 ? 20 : -20) : (isMouseNear && !isPasswordFocused ? (i === 0 ? -10 : 10) : 0),
               }}
               className="w-6 h-1 bg-slate-900/40 rounded-full"
             />
@@ -84,6 +120,7 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
               <motion.div
                 style={{ x: eyeX, y: eyeY }}
                 animate={{
+                  scale: isMouseNear && !isPasswordFocused ? 1.2 : 1,
                   scaleY: isPasswordFocused ? (passwordLength > 12 ? 0.4 : 0.1) : 1,
                 }}
                 className="w-4 h-4 bg-slate-900 rounded-full"
@@ -95,10 +132,10 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
         {/* Mouth */}
         <motion.div
           animate={{
-            height: isPasswordFocused ? 4 : (isEmailValid ? 12 : 6),
-            width: isPasswordFocused ? 12 : (isEmailValid ? 24 : 16),
-            borderRadius: isEmailValid && !isPasswordFocused ? "0 0 20px 20px" : "10px",
-            backgroundColor: isEmailValid && !isPasswordFocused ? "rgba(15, 23, 42, 0.4)" : "rgba(15, 23, 42, 0.2)"
+            height: isMouseNear && !isPasswordFocused ? 16 : (isPasswordFocused ? 4 : (isEmailValid || isHoveringSubmit ? 12 : 6)),
+            width: isMouseNear && !isPasswordFocused ? 16 : (isPasswordFocused ? 12 : (isEmailValid || isHoveringSubmit ? 24 : 16)),
+            borderRadius: isMouseNear && !isPasswordFocused ? "50%" : (isEmailValid || isHoveringSubmit ? "0 0 20px 20px" : "10px"),
+            backgroundColor: "rgba(15, 23, 42, 0.3)"
           }}
           className="absolute bottom-8"
         />
@@ -126,15 +163,15 @@ const AuthMonster = ({ isPasswordFocused, emailValue, passwordLength, isEmailVal
         </motion.div>
       </motion.div>
 
-      {/* Ears/Horns that wiggle */}
+      {/* Ears/Horns */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
-          animate={{ rotate: isTypingEmail ? [-5, 5, -5] : 0 }}
+          animate={{ rotate: isTypingEmail || isHoveringSubmit ? [-5, 5, -5] : 0 }}
           transition={{ duration: 0.3, repeat: Infinity }}
           className="absolute top-4 left-6 w-6 h-8 bg-[#1877F2] rounded-t-full -rotate-12"
         />
         <motion.div
-          animate={{ rotate: isTypingEmail ? [5, -5, 5] : 0 }}
+          animate={{ rotate: isTypingEmail || isHoveringSubmit ? [5, -5, 5] : 0 }}
           transition={{ duration: 0.3, repeat: Infinity }}
           className="absolute top-4 right-6 w-6 h-8 bg-[#1877F2] rounded-t-full rotate-12"
         />

@@ -35,6 +35,7 @@ interface AuthFormProps {
 
 const AuthForm = ({ type }: AuthFormProps) => {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isHoveringSubmit, setIsHoveringSubmit] = useState(false);
   
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
@@ -64,6 +65,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
           emailValue={emailValue}
           passwordLength={passwordValue.length}
           isEmailValid={isEmailValid}
+          isHoveringSubmit={isHoveringSubmit}
         />
         <CardTitle className="text-3xl font-black tracking-tight">
           {type === "login" ? "Welcome Back" : "Create Account"}
@@ -133,7 +135,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full h-12 rounded-xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold shadow-lg shadow-blue-500/20">
+            <Button 
+              type="submit" 
+              onMouseEnter={() => setIsHoveringSubmit(true)}
+              onMouseLeave={() => setIsHoveringSubmit(false)}
+              className="w-full h-12 rounded-xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold shadow-lg shadow-blue-500/20"
+            >
               {type === "login" ? "Sign In" : "Create Account"}
             </Button>
           </form>
