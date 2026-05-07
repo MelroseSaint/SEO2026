@@ -13,10 +13,12 @@ import {
   ChevronRight,
   Terminal,
   FileText,
-  MessageSquare
+  MessageSquare,
+  Network,
+  CheckCircle2,
+  Database
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const sections = [
   {
@@ -114,33 +116,108 @@ const sections = [
     id: "entities",
     title: "Entity Optimization",
     icon: Fingerprint,
-    content: (SectionContent("Entity Optimization", "Entities are the building blocks of the semantic web. Our engine identifies 'Missing' and 'Weak' entities that are critical for establishing topical authority in your niche."))
+    content: (
+      <div className="space-y-4">
+        <h2 className="text-3xl font-bold">Entity Optimization</h2>
+        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+          Entities are the building blocks of the semantic web. Our engine identifies 'Missing' and 'Weak' entities that are critical for establishing topical authority in your niche.
+        </p>
+        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+          <div className="flex items-center justify-between mb-6">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400">Knowledge Graph Visualization</h4>
+            <Network className="h-5 w-5 text-indigo-500" />
+          </div>
+          <div className="relative h-40 flex items-center justify-center">
+            <div className="absolute h-20 w-20 rounded-full bg-indigo-500/20 border border-indigo-500 flex items-center justify-center z-10">
+              <span className="text-[10px] font-bold">Core Topic</span>
+            </div>
+            <div className="absolute top-0 left-1/4 h-12 w-12 rounded-full bg-purple-500/10 border border-purple-500/30 flex items-center justify-center animate-pulse">
+              <span className="text-[8px]">Entity A</span>
+            </div>
+            <div className="absolute bottom-0 right-1/4 h-14 w-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+              <span className="text-[8px]">Entity B</span>
+            </div>
+            <div className="absolute top-1/2 right-10 h-10 w-10 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center">
+              <span className="text-[8px]">Entity C</span>
+            </div>
+            {/* Connecting Lines (CSS) */}
+            <div className="absolute w-full h-px bg-slate-200 dark:bg-white/10 rotate-45" />
+            <div className="absolute w-full h-px bg-slate-200 dark:bg-white/10 -rotate-45" />
+          </div>
+          <p className="text-center text-[10px] text-slate-400 mt-4 italic">Mapping semantic relationships between identified entities.</p>
+        </div>
+      </div>
+    )
   },
   {
     id: "eeat",
     title: "2026 E-E-A-T",
     icon: ShieldCheck,
-    content: (SectionContent("E-E-A-T Standards", "Experience, Expertise, Authoritativeness, and Trustworthiness have evolved. In 2026, AI models look for 'Human-in-the-loop' signals, proprietary data points, and verifiable first-person experience."))
+    content: (
+      <div className="space-y-4">
+        <h2 className="text-3xl font-bold">E-E-A-T Standards</h2>
+        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+          Experience, Expertise, Authoritativeness, and Trustworthiness have evolved. In 2026, AI models look for 'Human-in-the-loop' signals and verifiable first-person experience.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <span className="text-xs font-bold">Verified Experience</span>
+            </div>
+            <div className="h-1.5 w-full bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+              <div className="h-full w-[85%] bg-emerald-500" />
+            </div>
+          </div>
+          <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle2 className="h-4 w-4 text-blue-500" />
+              <span className="text-xs font-bold">Author Authority</span>
+            </div>
+            <div className="h-1.5 w-full bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+              <div className="h-full w-[92%] bg-blue-500" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   },
   {
     id: "schema",
     title: "Structured Data",
     icon: Code2,
-    content: (SectionContent("Advanced Schema", "Standard JSON-LD is no longer enough. We generate TechArticle, FAQPage, and Person schema optimized for LLM context windows and RAG (Retrieval-Augmented Generation) systems."))
+    content: (
+      <div className="space-y-4">
+        <h2 className="text-3xl font-bold">Advanced Schema</h2>
+        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+          Standard JSON-LD is no longer enough. We generate TechArticle, FAQPage, and Person schema optimized for LLM context windows.
+        </p>
+        <div className="p-4 rounded-xl bg-slate-900 text-indigo-300 font-mono text-[10px] overflow-hidden border border-white/10">
+          <div className="flex items-center justify-between mb-2 text-slate-500">
+            <span>schema-output.json</span>
+            <Database className="h-3 w-3" />
+          </div>
+          <pre className="leading-relaxed">
+            {`{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "AI Search Optimization",
+  "author": {
+    "@type": "Person",
+    "name": "SEO Expert",
+    "knowsAbout": ["LLM", "RAG", "Semantic Search"]
+  },
+  "mentions": [
+    { "@type": "Thing", "name": "GPT-4" },
+    { "@type": "Thing", "name": "Vector Embeddings" }
+  ]
+}`}
+          </pre>
+        </div>
+      </div>
+    )
   }
 ];
-
-function SectionContent(title: string, text: string) {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-3xl font-bold">{title}</h2>
-      <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{text}</p>
-      <div className="h-48 w-full bg-slate-100 dark:bg-white/5 rounded-2xl border border-dashed border-slate-300 dark:border-white/10 flex items-center justify-center">
-        <p className="text-xs text-slate-400 italic">Visual guide for {title} coming soon...</p>
-      </div>
-    </div>
-  );
-}
 
 const Docs = () => {
   const [activeSection, setActiveSection] = useState("introduction");
