@@ -4,12 +4,13 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, 
   Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, 
-  Users, Activity, Target, ChevronRight, LayoutDashboard
+  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -31,7 +32,26 @@ const SEOTool = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("deterministic");
+  const [currentPlan, setCurrentPlan] = useState("starter");
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Sync plan from localStorage
+  useEffect(() => {
+    const syncPlan = () => {
+      const plan = localStorage.getItem("seo2026_plan") || "starter";
+      setCurrentPlan(plan);
+    };
+    
+    syncPlan();
+    window.addEventListener('storage', syncPlan);
+    // Polling as a fallback for same-window updates
+    const interval = setInterval(syncPlan, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', syncPlan);
+      clearInterval(interval);
+    };
+  }, []);
 
   const liveMetrics = useMemo(() => {
     const words = input.trim() ? input.trim().split(/\s+/).length : 0;
@@ -46,8 +66,6 @@ const SEOTool = () => {
     const isComparative = words.some(w => ["vs", "versus", "better", "best", "alternative", "review"].includes(w));
 
     const primaryIntent = isTransactional ? "TRANSACTIONAL" : isComparative ? "COMPARATIVE" : isInformational ? "INFORMATIONAL" : "TOPICAL_PILLAR";
-    
-    // Extract potential entities (Capitalized words)
     const entities = Array.from(new Set(text.match(/[A-Z][a-z]+/g) || [])).slice(0, 5);
     const coreEntities = entities.length > 0 ? entities : ["GENERAL_TOPIC"];
 
@@ -57,58 +75,20 @@ const SEOTool = () => {
         siteType: text.includes("http") ? "EXTERNAL_URL" : "RAW_TEXT", 
         confidenceScore: Math.min(70 + (text.length / 10), 99).toFixed(0) 
       },
-      queryAnalysis: { 
-        primaryIntent, 
-        secondaryIntents: [isInformational ? "KNOWLEDGE_ACQUISITION" : "USER_CONVERSION"], 
-        targetAudience: text.length > 200 ? "EXPERT_LEVEL" : "GENERAL_PUBLIC", 
-        contentType: text.length > 500 ? "PILLAR_PAGE" : "MICRO_CONTENT" 
-      },
-      aiStrategy: { 
-        coreEntities, 
-        supportingEntities: ["SEMANTIC_RELEVANCE", "LLM_CONTEXT"], 
-        gaps: entities.length < 3 ? ["ENTITY_DENSITY_LOW"] : ["FIRST_PERSON_VERIFICATION"], 
-        positioning: "AUTHORITY_SIGNAL" 
-      },
-      keywordClusters: { 
-        primary: coreEntities[0], 
-        secondary: coreEntities.slice(1), 
-        longTail: [`Advanced ${coreEntities[0]} strategies`, `Future of ${coreEntities[0]}`], 
-        questions: [`How does ${coreEntities[0]} work?`, `Why use ${coreEntities[0]}?`] 
-      },
-      contentStructure: { 
-        h1: `The Definitive 2026 Guide to ${coreEntities[0]}`, 
-        h2: ["Executive Summary", "Core Methodology", "Implementation Framework"], 
-        h3: ["Technical Requirements", "Performance Benchmarks"], 
-        faq: { enabled: true, items: ["ROI Analysis", "Scalability"] } 
-      },
-      metadata: { 
-        title: `${coreEntities[0]} Optimization | 2026 Strategy`, 
-        description: `Master the semantic landscape of ${coreEntities[0]} with our AI-first optimization framework.`, 
-        slug: coreEntities[0].toLowerCase().replace(/\s+/g, '-'), 
-        ogTitle: `Dominating ${coreEntities[0]} in the AI Era`, 
-        ogDescription: "A data-driven approach to search visibility." 
-      },
-      aiCitation: { 
-        statements: [`${coreEntities[0]} is a critical component of modern digital infrastructure.`], 
-        facts: [`${(Math.random() * 100).toFixed(1)}% efficiency increase observed in recent tests.`], 
-        targets: ["Google AI Overview", "Perplexity Citation Engine"] 
-      },
-      schema: { 
-        types: ["TechArticle", "FAQPage"], 
-        requiredFields: ["headline", "author", "datePublished"] 
-      },
-      competitive: { 
-        strategy: "Semantic Gap Exploitation", 
-        differentiation: "Proprietary Data Integration", 
-        gapExploit: "Zero-Click Result Targeting" 
-      }
+      queryAnalysis: { primaryIntent, secondaryIntents: [isInformational ? "KNOWLEDGE_ACQUISITION" : "USER_CONVERSION"], targetAudience: text.length > 200 ? "EXPERT_LEVEL" : "GENERAL_PUBLIC", contentType: text.length > 500 ? "PILLAR_PAGE" : "MICRO_CONTENT" },
+      aiStrategy: { coreEntities, supportingEntities: ["SEMANTIC_RELEVANCE", "LLM_CONTEXT"], gaps: entities.length < 3 ? ["ENTITY_DENSITY_LOW"] : ["FIRST_PERSON_VERIFICATION"], positioning: "AUTHORITY_SIGNAL" },
+      keywordClusters: { primary: coreEntities[0], secondary: coreEntities.slice(1), longTail: [`Advanced ${coreEntities[0]} strategies`], questions: [`How does ${coreEntities[0]} work?`] },
+      contentStructure: { h1: `The Definitive 2026 Guide to ${coreEntities[0]}`, h2: ["Executive Summary", "Core Methodology"], h3: ["Technical Requirements"], faq: { enabled: true, items: ["ROI Analysis"] } },
+      metadata: { title: `${coreEntities[0]} Optimization | 2026 Strategy`, description: `Master the semantic landscape of ${coreEntities[0]}.`, slug: coreEntities[0].toLowerCase().replace(/\s+/g, '-'), ogTitle: `Dominating ${coreEntities[0]}`, ogDescription: "A data-driven approach." },
+      aiCitation: { statements: [`${coreEntities[0]} is critical.`], facts: [`${(Math.random() * 100).toFixed(1)}% efficiency increase.`], targets: ["Google AI Overview"] },
+      schema: { types: ["TechArticle", "FAQPage"], requiredFields: ["headline", "author"] },
+      competitive: { strategy: "Semantic Gap Exploitation", differentiation: "Proprietary Data", gapExploit: "Zero-Click Targeting" }
     };
   };
 
   const executeEngine = (val: string) => {
     const trimmedInput = val.trim();
     if (!trimmedInput || trimmedInput.length < 3) return;
-
     setLoading(true);
     setTimeout(() => {
       setResult(analyzeText(trimmedInput));
@@ -125,24 +105,43 @@ const SEOTool = () => {
   }, [input]);
 
   const menuItems = [
-    { id: "deterministic", label: "Engine Output", icon: Terminal },
-    { id: "audit", label: "Compliance Audit", icon: ShieldAlert },
-    { id: "credibility", label: "E-E-A-T Score", icon: ShieldCheck },
-    { id: "simulation", label: "AI Simulation", icon: BrainCircuit },
-    { id: "intent", label: "Intent Map", icon: Map },
-    { id: "structure", label: "Structure", icon: ListTree },
-    { id: "entities", label: "Entities", icon: Fingerprint },
-    { id: "gap", label: "Gap Analysis", icon: ArrowRightLeft },
-    { id: "refresh", label: "Refresh Intel", icon: RefreshCw },
-    { id: "generator", label: "Asset Gen", icon: Wand2 },
-    { id: "schema", label: "Schema", icon: Code2 },
-    { id: "graph", label: "Link Graph", icon: Share2 },
-    { id: "competitors", label: "Comp Intel", icon: Users },
+    { id: "deterministic", label: "Engine Output", icon: Terminal, tiers: ["starter", "professional", "enterprise"] },
+    { id: "audit", label: "Compliance Audit", icon: ShieldAlert, tiers: ["professional", "enterprise"] },
+    { id: "credibility", label: "E-E-A-T Score", icon: ShieldCheck, tiers: ["professional", "enterprise"] },
+    { id: "simulation", label: "AI Simulation", icon: BrainCircuit, tiers: ["professional", "enterprise"] },
+    { id: "intent", label: "Intent Map", icon: Map, tiers: ["professional", "enterprise"] },
+    { id: "structure", label: "Structure", icon: ListTree, tiers: ["professional", "enterprise"] },
+    { id: "entities", label: "Entities", icon: Fingerprint, tiers: ["starter", "professional", "enterprise"] },
+    { id: "gap", label: "Gap Analysis", icon: ArrowRightLeft, tiers: ["professional", "enterprise"] },
+    { id: "refresh", label: "Refresh Intel", icon: RefreshCw, tiers: ["professional", "enterprise"] },
+    { id: "generator", label: "Asset Gen", icon: Wand2, tiers: ["professional", "enterprise"] },
+    { id: "schema", label: "Schema", icon: Code2, tiers: ["starter", "professional", "enterprise"] },
+    { id: "graph", label: "Link Graph", icon: Share2, tiers: ["professional", "enterprise"] },
+    { id: "competitors", label: "Comp Intel", icon: Users, tiers: ["professional", "enterprise"] },
   ];
+
+  const isLocked = (itemId: string) => {
+    const item = menuItems.find(m => m.id === itemId);
+    if (!item) return true;
+    return !item.tiers.includes(currentPlan);
+  };
+
+  const handleTabClick = (id: string) => {
+    if (isLocked(id)) {
+      toast.error("Feature Locked", {
+        description: "This module requires a Professional or Enterprise plan.",
+        action: {
+          label: "Upgrade",
+          onClick: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+        }
+      });
+      return;
+    }
+    setActiveTab(id);
+  };
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto font-mono">
-      {/* Input Section */}
       <div className="grid gap-6 lg:grid-cols-4">
         <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-xl overflow-hidden">
           <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 py-3">
@@ -176,6 +175,10 @@ const SEOTool = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="py-4 space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-[9px] text-slate-500 uppercase">Active Tier</span>
+              <span className="text-[10px] font-bold text-indigo-600 uppercase">{currentPlan}</span>
+            </div>
             {result ? (
               <>
                 <div className="flex justify-between items-center">
@@ -186,11 +189,6 @@ const SEOTool = () => {
                   <span className="text-[9px] text-slate-500">CONFIDENCE</span>
                   <span className="text-[10px] font-bold text-emerald-500">{result.identification.confidenceScore}%</span>
                 </div>
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-indigo-500" style={{ width: `${result.identification.confidenceScore}%` }} />
-                  </div>
-                </div>
               </>
             ) : (
               <div className="text-[10px] text-slate-400 italic">Waiting for input...</div>
@@ -199,33 +197,38 @@ const SEOTool = () => {
         </Card>
       </div>
 
-      {/* Dashboard Section */}
       {result && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[600px]">
-          {/* Sidebar Navigation */}
           <div className="lg:col-span-3 space-y-2">
             <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Analysis Modules</div>
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={cn(
-                  "w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-medium transition-all group",
-                  activeTab === item.id 
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20" 
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-indigo-500")} />
-                  {item.label}
-                </div>
-                <ChevronRight className={cn("h-3 w-3 transition-transform", activeTab === item.id ? "translate-x-0" : "-translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0")} />
-              </button>
-            ))}
+            {menuItems.map((item) => {
+              const locked = isLocked(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleTabClick(item.id)}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-medium transition-all group",
+                    activeTab === item.id 
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20" 
+                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5",
+                    locked && "opacity-60 grayscale cursor-not-allowed"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-indigo-500")} />
+                    {item.label}
+                  </div>
+                  {locked ? (
+                    <Lock className="h-3 w-3 text-slate-400" />
+                  ) : (
+                    <ChevronRight className={cn("h-3 w-3 transition-transform", activeTab === item.id ? "translate-x-0" : "-translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0")} />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Content Area */}
           <div className="lg:col-span-9 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xl">
             <div className="mb-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
@@ -237,7 +240,7 @@ const SEOTool = () => {
                   <p className="text-[10px] text-slate-500 uppercase">Module_Active_v2.6</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2">
+              <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2" onClick={() => toast.info("Exporting data for " + activeTab)}>
                 <Share2 className="h-3 w-3" /> EXPORT_DATA
               </Button>
             </div>

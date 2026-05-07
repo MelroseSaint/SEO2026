@@ -1,45 +1,61 @@
 "use client";
 
 import React from "react";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const plans = [
+export const plans = [
   {
+    id: "starter",
     name: "Starter",
     price: "$49",
     description: "Perfect for individual creators and niche sites.",
     features: ["50 Analysis Credits/mo", "Basic Entity Mapping", "Standard Schema Export", "Email Support"],
     cta: "Start Free Trial",
-    popular: false
+    popular: false,
+    modules: ["deterministic", "entities", "schema"]
   },
   {
+    id: "professional",
     name: "Professional",
     price: "$149",
     description: "For growing teams and content agencies.",
     features: ["Unlimited Analysis", "Advanced AI Simulation", "Competitor Reverse Engineering", "Priority Support", "API Access"],
     cta: "Get Started",
-    popular: true
+    popular: true,
+    modules: ["deterministic", "audit", "credibility", "simulation", "intent", "structure", "entities", "gap", "refresh", "generator", "schema", "graph", "competitors"]
   },
   {
+    id: "enterprise",
     name: "Enterprise",
     price: "Custom",
     description: "Custom solutions for large-scale operations.",
     features: ["Custom LLM Training", "White-label Reports", "Dedicated Strategist", "SLA Guarantees"],
     cta: "Contact Sales",
-    popular: false
+    popular: false,
+    modules: ["all"]
   }
 ];
 
 const Pricing = () => {
-  const handlePlanSelect = (planName: string) => {
-    if (planName === "Enterprise") {
+  const handlePlanSelect = (plan: typeof plans[0]) => {
+    if (plan.id === "enterprise") {
       toast.success("Request sent! Our sales team will contact you within 24 hours.");
     } else {
-      toast.success(`Excellent choice! Redirecting to ${planName} checkout...`);
+      // Persist plan selection for the tool to read
+      localStorage.setItem("seo2026_plan", plan.id);
+      toast.success(`Plan updated to ${plan.name}! The SEO Engine is now configured for your tier.`);
+      
+      // Scroll to tool to see changes
+      const toolElement = document.getElementById('tool');
+      if (toolElement) {
+        toolElement.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
+
+  const currentPlanId = typeof window !== 'undefined' ? localStorage.getItem("seo2026_plan") || "starter" : "starter";
 
   return (
     <section id="pricing" className="py-24 bg-slate-50 dark:bg-white/[0.02]">
@@ -52,14 +68,14 @@ const Pricing = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan, i) => (
+          {plans.map((plan) => (
             <div 
-              key={i} 
+              key={plan.id} 
               className={`relative p-8 rounded-3xl border transition-all duration-500 ${
                 plan.popular 
                   ? "bg-white dark:bg-slate-900 border-indigo-500 shadow-2xl shadow-indigo-500/10 scale-105 z-10" 
                   : "bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20"
-              }`}
+              } ${currentPlanId === plan.id ? "ring-2 ring-indigo-600 ring-offset-4 dark:ring-offset-slate-950" : ""}`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-widest">
@@ -67,7 +83,12 @@ const Pricing = () => {
                 </div>
               )}
               <div className="mb-8">
-                <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-xl font-bold">{plan.name}</h3>
+                  {currentPlanId === plan.id && (
+                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded">CURRENT</span>
+                  )}
+                </div>
                 <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
                   {plan.price !== "Custom" && <span className="text-slate-500">/mo</span>}
@@ -87,14 +108,15 @@ const Pricing = () => {
               </div>
 
               <Button 
-                onClick={() => handlePlanSelect(plan.name)}
+                onClick={() => handlePlanSelect(plan)}
+                disabled={currentPlanId === plan.id && plan.id !== "enterprise"}
                 className={`w-full py-6 rounded-xl font-bold transition-all ${
                   plan.popular 
                     ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20" 
                     : "bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-900 dark:text-white"
                 }`}
               >
-                {plan.cta}
+                {currentPlanId === plan.id && plan.id !== "enterprise" ? "Active Plan" : plan.cta}
               </Button>
             </div>
           ))}
