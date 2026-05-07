@@ -4,63 +4,59 @@ import React from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { usePlan } from "@/context/PlanContext";
 
 export const plans = [
   {
-    id: "starter",
+    id: "starter" as const,
     name: "Starter",
     price: "$49",
     description: "Perfect for individual creators and niche sites.",
     features: ["50 Analysis Credits/mo", "Basic Entity Mapping", "Standard Schema Export", "Email Support"],
     cta: "Start Free Trial",
-    popular: false,
-    modules: ["deterministic", "entities", "schema"]
+    popular: false
   },
   {
-    id: "professional",
+    id: "professional" as const,
     name: "Professional",
     price: "$149",
     description: "For growing teams and content agencies.",
     features: ["Unlimited Analysis", "Advanced AI Simulation", "Competitor Reverse Engineering", "Priority Support", "API Access"],
     cta: "Get Started",
-    popular: true,
-    modules: ["deterministic", "audit", "credibility", "simulation", "intent", "structure", "entities", "gap", "refresh", "generator", "schema", "graph", "competitors"]
+    popular: true
   },
   {
-    id: "enterprise",
+    id: "enterprise" as const,
     name: "Enterprise",
     price: "Custom",
     description: "Custom solutions for large-scale operations.",
     features: ["Custom LLM Training", "White-label Reports", "Dedicated Strategist", "SLA Guarantees"],
     cta: "Activate Enterprise Demo",
-    popular: false,
-    modules: ["all"]
+    popular: false
   }
 ];
 
 const Pricing = () => {
-  const handlePlanSelect = (plan: typeof plans[0]) => {
-    // Persist plan selection for the tool to read
-    localStorage.setItem("seo2026_plan", plan.id);
+  const { plan: currentPlanId, setPlan } = usePlan();
+
+  const handlePlanSelect = (planId: "starter" | "professional" | "enterprise") => {
+    setPlan(planId);
     
-    if (plan.id === "enterprise") {
+    if (planId === "enterprise") {
       toast.success("Enterprise Mode Activated", {
         description: "All advanced modules are now unlocked for your session."
       });
     } else {
-      toast.success(`Plan updated to ${plan.name}!`, {
+      toast.success(`Plan updated!`, {
         description: "The SEO Engine is now configured for your tier."
       });
     }
     
-    // Scroll to tool to see changes
     const toolElement = document.getElementById('tool');
     if (toolElement) {
       toolElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  const currentPlanId = typeof window !== 'undefined' ? localStorage.getItem("seo2026_plan") || "starter" : "starter";
 
   return (
     <section id="pricing" className="py-24 bg-slate-50 dark:bg-white/[0.02]">
@@ -113,7 +109,7 @@ const Pricing = () => {
               </div>
 
               <Button 
-                onClick={() => handlePlanSelect(plan)}
+                onClick={() => handlePlanSelect(plan.id)}
                 disabled={currentPlanId === plan.id}
                 className={`w-full py-6 rounded-xl font-bold transition-all ${
                   plan.popular 

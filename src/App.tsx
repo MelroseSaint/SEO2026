@@ -1,19 +1,22 @@
 "use client";
 
-import { Toaster } from "sonner";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Docs from "./pages/Docs";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from 'next-themes';
+import { PlanProvider } from './context/PlanContext';
+import Index from './pages/Index';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Toaster position="top-center" expand={false} richColors />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/docs" element={<Docs />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <PlanProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+        </Routes>
+        <Toaster position="top-center" richColors />
+      </PlanProvider>
+    </ThemeProvider>
   );
 }
 

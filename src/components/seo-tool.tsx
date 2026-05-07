@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { usePlan } from "@/context/PlanContext";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -32,25 +33,8 @@ const SEOTool = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("deterministic");
-  const [currentPlan, setCurrentPlan] = useState("starter");
+  const { plan: currentPlan } = usePlan();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-
-  // Sync plan from localStorage
-  useEffect(() => {
-    const syncPlan = () => {
-      const plan = localStorage.getItem("seo2026_plan") || "starter";
-      setCurrentPlan(plan);
-    };
-    
-    syncPlan();
-    window.addEventListener('storage', syncPlan);
-    const interval = setInterval(syncPlan, 1000);
-    
-    return () => {
-      window.removeEventListener('storage', syncPlan);
-      clearInterval(interval);
-    };
-  }, []);
 
   const liveMetrics = useMemo(() => {
     const words = input.trim() ? input.trim().split(/\s+/).length : 0;
@@ -87,7 +71,7 @@ const SEOTool = () => {
 
   const executeEngine = (val: string) => {
     const trimmedInput = val.trim();
-    if (!trimmedInput || trimmedInput.length < 3) return;
+    if (trimmedInput.length < 3) return;
     setLoading(true);
     setTimeout(() => {
       setResult(analyzeText(trimmedInput));
@@ -120,7 +104,7 @@ const SEOTool = () => {
   ];
 
   const isLocked = (itemId: string) => {
-    if (currentPlan === "enterprise") return false; // Enterprise unlocks everything
+    if (currentPlan === "enterprise") return false;
     const item = menuItems.find(m => m.id === itemId);
     if (!item) return true;
     return !item.tiers.includes(currentPlan);
