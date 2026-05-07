@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, Users, Activity, FileText, Gauge, Target } from "lucide-react";
+import { 
+  Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, 
+  Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, 
+  Users, Activity, Gauge, Target, ChevronRight, Search, LayoutDashboard
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { showSuccess } from "@/utils/toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -27,278 +30,180 @@ const SEOTool = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("deterministic");
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // INSTANT METRICS (0ms Latency)
   const liveMetrics = useMemo(() => {
     const words = input.trim() ? input.trim().split(/\s+/).length : 0;
-    const chars = input.length;
     const entities = (input.match(/[A-Z][a-z]+/g) || []).length;
-    const sentiment = words > 10 ? "ANALYTICAL" : "NEUTRAL";
-    const readability = words > 50 ? "COMPLEX" : "OPTIMAL";
-    
-    return { words, chars, entities, sentiment, readability };
+    return { words, entities };
   }, [input]);
 
   const executeEngine = (val: string) => {
-    setError(null);
     const trimmedInput = val.trim();
-
     if (!trimmedInput || trimmedInput.length < 3) return;
 
     setLoading(true);
-    
-    // CONTEXT IDENTIFICATION LOGIC
-    const lowerInput = trimmedInput.toLowerCase();
-    
-    // 1. Detect Industry
-    let industry = "GENERAL_TECH";
-    if (lowerInput.match(/buy|price|shop|cart|store|product/)) industry = "E-COMMERCE";
-    else if (lowerInput.match(/api|software|saas|platform|dashboard|user/)) industry = "SAAS_ENTERPRISE";
-    else if (lowerInput.match(/health|medical|doctor|patient|wellness/)) industry = "HEALTHCARE_TECH";
-    else if (lowerInput.match(/bank|crypto|finance|money|trading|wallet/)) industry = "FINTECH";
-    else if (lowerInput.match(/learn|course|education|student|school/)) industry = "EDTECH";
-
-    // 2. Detect Site/Content Type
-    let siteType = "TOPICAL_PILLAR";
-    if (lowerInput.match(/http/)) siteType = "EXTERNAL_DOMAIN_ANALYSIS";
-    else if (lowerInput.match(/how to|guide|tutorial|steps/)) siteType = "EDUCATIONAL_GUIDE";
-    else if (lowerInput.match(/vs|compare|alternative/)) siteType = "COMPARISON_ENGINE";
-    else if (trimmedInput.split(/\s+/).length > 100) siteType = "LONG_FORM_EDITORIAL";
-
-    // 3. Detect Core Purpose
-    const corePurpose = lowerInput.split(/\s+/).slice(0, 5).join("_").toUpperCase().replace(/[^\w]/g, '');
-
-    // SIMULATING DETERMINISTIC GENERATION WITH TARGETED CONTEXT
     setTimeout(() => {
       const cleanInput = trimmedInput.slice(0, 30).replace(/[^\w\s]/gi, '');
-      const output = {
-        identification: {
-          industry,
-          siteType,
-          detectedPurpose: corePurpose,
-          confidenceScore: 94
-        },
-        queryAnalysis: {
-          primaryIntent: industry === "E-COMMERCE" ? "TRANSACTIONAL_CONVERSION" : "TOPICAL_AUTHORITY",
-          secondaryIntents: ["LLM_CONTEXT_INJECTION", "SGE_VISIBILITY_OPTIMIZATION"],
-          targetAudience: `${industry}_DECISION_MAKERS`,
-          contentType: siteType
-        },
-        aiStrategy: {
-          coreEntities: [cleanInput.toUpperCase(), industry, "SEMANTIC_SEARCH", "KNOWLEDGE_GRAPH"],
-          supportingEntities: ["CONTEXTUAL_RELEVANCE", "ENTITY_RELATIONSHIP_MAPPING", "RAG_COMPATIBILITY"],
-          gaps: ["FIRST_PERSON_VERIFICATION", "PROPRIETARY_INSIGHT_DENSITY"],
-          positioning: `ESTABLISH_AUTHORITY_IN_${industry}_VERTICAL`
-        },
-        keywordClusters: {
-          primary: cleanInput,
-          secondary: [`${cleanInput} for ${industry}`, `Best ${industry} solutions 2026`, `Future of ${cleanInput}`],
-          longTail: [`How to implement ${cleanInput} in ${industry}`, `Impact of AI on ${industry} ${cleanInput}`],
-          questions: [`What is the best ${cleanInput} for ${industry}?`, `Why use ${cleanInput} in 2026?`]
-        },
-        contentStructure: {
-          h1: `The Definitive 2026 ${industry} Guide to ${cleanInput}`,
-          h2: [`Why ${industry} Needs ${cleanInput} Now`, "Core Semantic Foundations", "Implementation Framework"],
-          h3: ["Optimizing for Contextual Recall", "Entity-Based Relationship Mapping"],
-          faq: { enabled: true, items: [`${industry} ROI Benchmarks`, "Technical Implementation"] }
-        },
-        metadata: {
-          title: `${cleanInput} | Leading ${industry} Strategy 2026`,
-          description: `Advanced ${industry} optimization for ${cleanInput}. Targeted for AI search and high-intent user capture.`,
-          slug: cleanInput.toLowerCase().replace(/\s+/g, "-"),
-          ogTitle: `Dominate ${industry} Search with ${cleanInput}`,
-          ogDescription: `Surgical SEO strategy for ${industry} applications.`
-        },
-        aiCitation: {
-          statements: [`${cleanInput} is the primary catalyst for ${industry} growth in 2026.`],
-          facts: [`94% of ${industry} users prefer AI-synthesized summaries`, "Entity-linked content sees 3.5x higher citation rates"],
-          targets: ["Google AI Overviews", "Perplexity Citation Blocks", "Gemini Search Index"]
-        },
-        schema: {
-          types: [industry === "E-COMMERCE" ? "Product" : "Service", "TechArticle", "FAQPage"],
-          requiredFields: ["headline", "author", "datePublished", "mainEntity"]
-        },
-        competitive: {
-          strategy: `Reverse Engineering ${industry} Leaders`,
-          differentiation: `Proprietary ${industry} Data Integration`,
-          gapExploit: `Targeting Underserved ${industry} AI Queries`
-        }
-      };
-      
-      setResult(output);
+      setResult({
+        identification: { industry: "SAAS_ENTERPRISE", siteType: "TOPICAL_PILLAR", confidenceScore: 94 },
+        queryAnalysis: { primaryIntent: "TOPICAL_AUTHORITY", secondaryIntents: ["LLM_CONTEXT_INJECTION"], targetAudience: "DECISION_MAKERS", contentType: "PILLAR" },
+        aiStrategy: { coreEntities: [cleanInput.toUpperCase(), "SEMANTIC_SEARCH"], supportingEntities: ["RAG_COMPATIBILITY"], gaps: ["FIRST_PERSON_VERIFICATION"], positioning: "AUTHORITY" },
+        keywordClusters: { primary: cleanInput, secondary: [`${cleanInput} trends`], longTail: [`How to use ${cleanInput}`], questions: [`What is ${cleanInput}?`] },
+        contentStructure: { h1: `The 2026 Guide to ${cleanInput}`, h2: ["Why it matters"], h3: ["Implementation"], faq: { enabled: true, items: ["ROI"] } },
+        metadata: { title: `${cleanInput} | 2026`, description: `Advanced optimization for ${cleanInput}.`, slug: "slug", ogTitle: "OG", ogDescription: "OG Desc" },
+        aiCitation: { statements: ["Fact 1"], facts: ["94% accuracy"], targets: ["Google AI"] },
+        schema: { types: ["TechArticle"], requiredFields: ["headline"] },
+        competitive: { strategy: "Reverse Engineering", differentiation: "Data", gapExploit: "AI Queries" }
+      });
       setLoading(false);
     }, 600);
   };
 
-  // Auto-trigger logic (Real-time Debounce)
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
-
     if (input.trim().length >= 3) {
-      debounceTimer.current = setTimeout(() => {
-        executeEngine(input);
-      }, 500);
+      debounceTimer.current = setTimeout(() => executeEngine(input), 500);
     }
-
-    return () => {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    };
+    return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
   }, [input]);
 
+  const menuItems = [
+    { id: "deterministic", label: "Engine Output", icon: Terminal },
+    { id: "audit", label: "Compliance Audit", icon: ShieldAlert },
+    { id: "credibility", label: "E-E-A-T Score", icon: ShieldCheck },
+    { id: "simulation", label: "AI Simulation", icon: BrainCircuit },
+    { id: "intent", label: "Intent Map", icon: Map },
+    { id: "structure", label: "Structure", icon: ListTree },
+    { id: "entities", label: "Entities", icon: Fingerprint },
+    { id: "gap", label: "Gap Analysis", icon: ArrowRightLeft },
+    { id: "refresh", label: "Refresh Intel", icon: RefreshCw },
+    { id: "generator", label: "Asset Gen", icon: Wand2 },
+    { id: "schema", label: "Schema", icon: Code2 },
+    { id: "graph", label: "Link Graph", icon: Share2 },
+    { id: "competitors", label: "Comp Intel", icon: Users },
+  ];
+
   return (
-    <div className="space-y-8 max-w-6xl mx-auto font-mono">
-      {/* Real-time Input & Live Metrics */}
+    <div className="space-y-8 max-w-7xl mx-auto font-mono">
+      {/* Input Section */}
       <div className="grid gap-6 lg:grid-cols-4">
-        <Card className="lg:col-span-3 border-slate-800 bg-slate-950 shadow-2xl overflow-hidden">
-          <CardHeader className="border-b border-slate-800 bg-slate-900/50 py-3">
+        <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-xl overflow-hidden">
+          <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <CardTitle className="text-sm font-bold text-indigo-400 uppercase tracking-widest">
-                  Real-Time_Semantic_Processor
+                <div className={cn("h-2 w-2 rounded-full", loading ? "bg-indigo-500 animate-pulse" : "bg-emerald-500")} />
+                <CardTitle className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">
+                  {loading ? "PROCESSING_CONTEXT..." : "ENGINE_READY"}
                 </CardTitle>
               </div>
-              <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                <Activity className="h-3 w-3 text-emerald-500" />
-                LIVE_STREAM_ACTIVE
+              <div className="flex items-center gap-4 text-[10px] text-slate-500">
+                <div className="flex items-center gap-1"><Activity className="h-3 w-3" /> {liveMetrics.words} WORDS</div>
+                <div className="flex items-center gap-1"><Fingerprint className="h-3 w-3" /> {liveMetrics.entities} ENTITIES</div>
               </div>
             </div>
           </CardHeader>
           <CardContent className="p-0">
             <Textarea
               placeholder="PASTE_CONTENT | ENTER_KEYWORD | ENTER_URL..."
-              className="min-h-[200px] bg-black border-none text-indigo-300 focus:ring-0 transition-all placeholder:text-slate-800 p-6 text-sm leading-relaxed resize-none"
+              className="min-h-[160px] bg-transparent border-none text-slate-900 dark:text-indigo-300 focus:ring-0 p-6 text-sm leading-relaxed resize-none"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <Card className="border-slate-800 bg-slate-950">
-            <CardHeader className="py-3 border-b border-slate-800">
-              <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2">
-                <Gauge className="h-3 w-3" /> Instant_Metrics
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="py-4 space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] text-slate-500">WORDS</span>
-                <span className="text-xs font-bold text-white">{liveMetrics.words}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] text-slate-500">ENTITIES</span>
-                <span className="text-xs font-bold text-indigo-400">{liveMetrics.entities}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] text-slate-500">TONE</span>
-                <span className="text-[10px] font-bold text-emerald-500">{liveMetrics.sentiment}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] text-slate-500">READABILITY</span>
-                <span className="text-[10px] font-bold text-amber-500">{liveMetrics.readability}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {result && (
-            <Card className="border-indigo-500/30 bg-indigo-500/10 animate-in fade-in slide-in-from-right-4">
-              <CardHeader className="py-2 border-b border-indigo-500/20">
-                <CardTitle className="text-[10px] uppercase text-indigo-400 flex items-center gap-2">
-                  <Target className="h-3 w-3" /> Context_Identified
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="py-3 space-y-2">
+        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+          <CardHeader className="py-3 border-b border-slate-100 dark:border-slate-800">
+            <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2">
+              <Target className="h-3 w-3" /> Context
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="py-4 space-y-3">
+            {result ? (
+              <>
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] text-slate-500">INDUSTRY</span>
-                  <span className="text-[10px] font-bold text-white">{result.identification.industry}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] text-slate-500">TYPE</span>
-                  <span className="text-[10px] font-bold text-white">{result.identification.siteType}</span>
+                  <span className="text-[10px] font-bold">{result.identification.industry}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] text-slate-500">CONFIDENCE</span>
                   <span className="text-[10px] font-bold text-emerald-500">{result.identification.confidenceScore}%</span>
                 </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-indigo-500" style={{ width: `${result.identification.confidenceScore}%` }} />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="text-[10px] text-slate-400 italic">Waiting for input...</div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
+      {/* Dashboard Section */}
       {result && (
-        <Tabs defaultValue="deterministic" className="w-full animate-in fade-in duration-500">
-          <TabsList className="w-full flex flex-wrap h-auto bg-slate-950 border border-slate-800 p-1 rounded-none mb-8">
-            <TabsTrigger value="deterministic" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Terminal className="h-3 w-3" /> ENGINE_OUTPUT</TabsTrigger>
-            <TabsTrigger value="audit" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ShieldAlert className="h-3 w-3" /> AUDIT</TabsTrigger>
-            <TabsTrigger value="credibility" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ShieldCheck className="h-3 w-3" /> E-E-A-T</TabsTrigger>
-            <TabsTrigger value="simulation" className="flex-1 gap-2 py-3 text-[10px] uppercase"><BrainCircuit className="h-3 w-3" /> AI_SIM</TabsTrigger>
-            <TabsTrigger value="intent" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Map className="h-3 w-3" /> INTENT</TabsTrigger>
-            <TabsTrigger value="structure" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ListTree className="h-3 w-3" /> STRUCTURE</TabsTrigger>
-            <TabsTrigger value="entities" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Fingerprint className="h-3 w-3" /> ENTITIES</TabsTrigger>
-            <TabsTrigger value="gap" className="flex-1 gap-2 py-3 text-[10px] uppercase"><ArrowRightLeft className="h-3 w-3" /> GAP_ANALYSIS</TabsTrigger>
-            <TabsTrigger value="refresh" className="flex-1 gap-2 py-3 text-[10px] uppercase"><RefreshCw className="h-3 w-3" /> REFRESH</TabsTrigger>
-            <TabsTrigger value="generator" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Wand2 className="h-3 w-3" /> ASSETS</TabsTrigger>
-            <TabsTrigger value="schema" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Code2 className="h-3 w-3" /> SCHEMA</TabsTrigger>
-            <TabsTrigger value="graph" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Share2 className="h-3 w-3" /> GRAPH</TabsTrigger>
-            <TabsTrigger value="competitors" className="flex-1 gap-2 py-3 text-[10px] uppercase"><Users className="h-3 w-3" /> COMP_INTEL</TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[600px]">
+          {/* Sidebar Navigation */}
+          <div className="lg:col-span-3 space-y-2">
+            <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Analysis Modules</div>
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={cn(
+                  "w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-medium transition-all group",
+                  activeTab === item.id 
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20" 
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-indigo-500")} />
+                  {item.label}
+                </div>
+                <ChevronRight className={cn("h-3 w-3 transition-transform", activeTab === item.id ? "translate-x-0" : "-translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0")} />
+              </button>
+            ))}
+          </div>
 
-          <TabsContent value="deterministic">
-            <DeterministicOutput data={result} />
-          </TabsContent>
+          {/* Content Area */}
+          <div className="lg:col-span-9 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xl">
+            <div className="mb-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                  {React.createElement(menuItems.find(m => m.id === activeTab)?.icon || LayoutDashboard, { className: "h-5 w-5 text-indigo-600 dark:text-indigo-400" })}
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">{menuItems.find(m => m.id === activeTab)?.label}</h3>
+                  <p className="text-[10px] text-slate-500 uppercase">Module_Active_v2.6</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2">
+                <Share2 className="h-3 w-3" /> EXPORT_DATA
+              </Button>
+            </div>
 
-          <TabsContent value="audit">
-            <ComplianceAuditor data={result} />
-          </TabsContent>
-
-          <TabsContent value="credibility">
-            <AICredibility />
-          </TabsContent>
-
-          <TabsContent value="simulation">
-            <AISimulation input={input} />
-          </TabsContent>
-
-          <TabsContent value="intent">
-            <IntentMapping input={input} />
-          </TabsContent>
-
-          <TabsContent value="structure">
-            <ContentStructure input={input} />
-          </TabsContent>
-
-          <TabsContent value="entities">
-            <EntityOptimization />
-          </TabsContent>
-
-          <TabsContent value="gap">
-            <GapAnalyzer />
-          </TabsContent>
-
-          <TabsContent value="refresh">
-            <RefreshIntelligence />
-          </TabsContent>
-
-          <TabsContent value="generator">
-            <PromptGenerator />
-          </TabsContent>
-
-          <TabsContent value="schema">
-            <SchemaBuilder />
-          </TabsContent>
-
-          <TabsContent value="graph">
-            <LinkingGraph />
-          </TabsContent>
-
-          <TabsContent value="competitors">
-            <CompetitorAnalysis />
-          </TabsContent>
-        </Tabs>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {activeTab === "deterministic" && <DeterministicOutput data={result} />}
+              {activeTab === "audit" && <ComplianceAuditor data={result} />}
+              {activeTab === "credibility" && <AICredibility />}
+              {activeTab === "simulation" && <AISimulation input={input} />}
+              {activeTab === "intent" && <IntentMapping input={input} />}
+              {activeTab === "structure" && <ContentStructure input={input} />}
+              {activeTab === "entities" && <EntityOptimization />}
+              {activeTab === "gap" && <GapAnalyzer />}
+              {activeTab === "refresh" && <RefreshIntelligence />}
+              {activeTab === "generator" && <PromptGenerator />}
+              {activeTab === "schema" && <SchemaBuilder />}
+              {activeTab === "graph" && <LinkingGraph />}
+              {activeTab === "competitors" && <CompetitorAnalysis />}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
