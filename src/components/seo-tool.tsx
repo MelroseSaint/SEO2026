@@ -125,53 +125,53 @@ const SEOTool = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto font-mono">
+    <div className="space-y-8 max-w-7xl mx-auto font-sans">
       <div className="grid gap-6 lg:grid-cols-4">
-        <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-xl overflow-hidden">
-          <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 py-3">
+        <Card className="lg:col-span-3 border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a1a1a] shadow-xl overflow-hidden">
+          <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-[#2a2a2a]/50 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className={cn("h-2 w-2 rounded-full", loading ? "bg-teal-500 animate-pulse" : "bg-emerald-500")} />
-                <CardTitle className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">
-                  {loading ? "PROCESSING_CONTEXT..." : "ENGINE_READY"}
+                <div className={cn("h-2 w-2 rounded-full", loading ? "bg-red-600 animate-pulse" : "bg-red-600")} />
+                <CardTitle className="text-xs font-bold text-red-600 uppercase tracking-widest">
+                  {loading ? "PROCESSING_CONTEXT..." : "LIVE_ENGINE_READY"}
                 </CardTitle>
               </div>
-              <div className="flex items-center gap-4 text-[10px] text-slate-500">
-                <div className="flex items-center gap-1"><Activity className="h-3 w-3" /> {liveMetrics.words} WORDS</div>
-                <div className="flex items-center gap-1"><Fingerprint className="h-3 w-3" /> {liveMetrics.entities} ENTITIES</div>
+              <div className="flex items-center gap-4 text-[10px] text-slate-500 font-bold">
+                <div className="flex items-center gap-1"><Activity className="h-3 w-3 text-red-600" /> {liveMetrics.words} WORDS</div>
+                <div className="flex items-center gap-1"><Fingerprint className="h-3 w-3 text-blue-600" /> {liveMetrics.entities} ENTITIES</div>
               </div>
             </div>
           </CardHeader>
           <CardContent className="p-0">
             <Textarea
               placeholder="PASTE_CONTENT | ENTER_KEYWORD | ENTER_URL..."
-              className="min-h-[160px] bg-transparent border-none text-slate-900 dark:text-teal-300 focus:ring-0 p-6 text-sm leading-relaxed resize-none"
+              className="min-h-[160px] bg-transparent border-none text-slate-900 dark:text-white focus:ring-0 p-6 text-base leading-relaxed resize-none"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1a1a1a]">
           <CardHeader className="py-3 border-b border-slate-100 dark:border-slate-800">
-            <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2">
-              <Target className="h-3 w-3" /> Context
+            <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2 font-bold">
+              <Target className="h-3 w-3 text-blue-600" /> Context
             </CardTitle>
           </CardHeader>
           <CardContent className="py-4 space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-[9px] text-slate-500 uppercase">Active Tier</span>
-              <span className="text-[10px] font-bold text-teal-600 uppercase">{currentPlan}</span>
+              <span className="text-[9px] text-slate-500 uppercase font-bold">Active Tier</span>
+              <span className="text-[10px] font-bold text-blue-600 uppercase">{currentPlan}</span>
             </div>
             {result ? (
               <>
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] text-slate-500">INDUSTRY</span>
+                  <span className="text-[9px] text-slate-500 font-bold">INDUSTRY</span>
                   <span className="text-[10px] font-bold">{result.identification.industry}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] text-slate-500">CONFIDENCE</span>
-                  <span className="text-[10px] font-bold text-emerald-500">{result.identification.confidenceScore}%</span>
+                  <span className="text-[9px] text-slate-500 font-bold">CONFIDENCE</span>
+                  <span className="text-[10px] font-bold text-red-600">{result.identification.confidenceScore}%</span>
                 </div>
               </>
             ) : (
@@ -183,7 +183,7 @@ const SEOTool = () => {
 
       {result && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[600px]">
-          <div className="lg:col-span-3 space-y-2">
+          <div className="lg:col-span-3 space-y-1">
             <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Analysis Modules</div>
             {menuItems.map((item) => {
               const locked = isLocked(item.id);
@@ -192,15 +192,15 @@ const SEOTool = () => {
                   key={item.id}
                   onClick={() => handleTabClick(item.id)}
                   className={cn(
-                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-medium transition-all group",
+                    "w-full flex items-center justify-between px-4 py-3 rounded-lg text-xs font-bold transition-all group",
                     activeTab === item.id 
-                      ? "bg-teal-600 text-white shadow-lg shadow-teal-500/20" 
+                      ? "bg-[#1877F2] text-white shadow-lg shadow-blue-500/20" 
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5",
                     locked && "opacity-60 grayscale cursor-not-allowed"
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-teal-500")} />
+                    <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-blue-600")} />
                     {item.label}
                   </div>
                   {locked ? (
@@ -213,18 +213,18 @@ const SEOTool = () => {
             })}
           </div>
 
-          <div className="lg:col-span-9 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xl">
+          <div className="lg:col-span-9 bg-white dark:bg-[#1a1a1a] rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xl">
             <div className="mb-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                  {React.createElement(menuItems.find(m => m.id === activeTab)?.icon || LayoutDashboard, { className: "h-5 w-5 text-teal-600 dark:text-teal-400" })}
+                <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  {React.createElement(menuItems.find(m => m.id === activeTab)?.icon || LayoutDashboard, { className: "h-5 w-5 text-blue-600" })}
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">{menuItems.find(m => m.id === activeTab)?.label}</h3>
-                  <p className="text-[10px] text-slate-500 uppercase">Module_Active_v2.6</p>
+                  <p className="text-[10px] text-slate-500 uppercase font-bold">Module_Active_v2.6</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2" onClick={() => toast.info("Exporting data for " + activeTab)}>
+              <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2 font-bold" onClick={() => toast.info("Exporting data for " + activeTab)}>
                 <Share2 className="h-3 w-3" /> EXPORT_DATA
               </Button>
             </div>

@@ -54,17 +54,17 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-black/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/90 dark:bg-[#0f0f0f]/90 backdrop-blur-xl">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <div 
             className="flex items-center gap-2 font-bold text-xl tracking-tight cursor-pointer group" 
             onClick={handleLogoClick}
           >
-            <div className="h-8 w-8 bg-teal-600 rounded-lg flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform">
+            <div className="h-8 w-8 bg-[#1877F2] rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="hidden sm:inline">SEO<span className="text-teal-600 dark:text-teal-400">2026</span></span>
+            <span className="hidden sm:inline">SEO<span className="text-[#1877F2]">2026</span></span>
           </div>
           
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -72,7 +72,7 @@ const Navbar = () => {
               <button 
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
-                className="hover:text-teal-600 dark:hover:text-white transition-colors"
+                className="hover:text-[#1877F2] dark:hover:text-white transition-colors"
               >
                 {link.name}
               </button>
@@ -81,7 +81,7 @@ const Navbar = () => {
               to="/docs" 
               className={cn(
                 "transition-colors",
-                isDocsPage ? "text-teal-600 dark:text-white" : "hover:text-teal-600 dark:hover:text-white"
+                isDocsPage ? "text-[#1877F2] dark:text-white" : "hover:text-[#1877F2] dark:hover:text-white"
               )}
             >
               Docs
@@ -101,7 +101,7 @@ const Navbar = () => {
           </Button>
           <Button 
             onClick={() => isDocsPage ? navigate("/#tool") : scrollToSection('tool')}
-            className="bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-500/20"
+            className="bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-lg shadow-blue-500/20 rounded-lg"
           >
             Get Started
           </Button>
@@ -118,7 +118,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Overlay */}
       <div className={cn(
-        "fixed inset-0 top-16 z-40 bg-white dark:bg-black md:hidden transition-all duration-300 ease-in-out",
+        "fixed inset-0 top-16 z-40 bg-white dark:bg-[#0f0f0f] md:hidden transition-all duration-300 ease-in-out",
         isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
       )}>
         <div className="flex flex-col p-6 gap-6">
@@ -126,23 +126,23 @@ const Navbar = () => {
             <button 
               key={link.id}
               onClick={() => scrollToSection(link.id)}
-              className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-white transition-colors"
+              className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-[#1877F2] dark:hover:text-white transition-colors"
             >
-              <link.icon className="h-5 w-5 text-teal-500" />
+              <link.icon className="h-5 w-5 text-[#1877F2]" />
               {link.name}
             </button>
           ))}
           <Link 
             to="/docs" 
             onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-white transition-colors"
+            className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-[#1877F2] dark:hover:text-white transition-colors"
           >
-            <BookOpen className="h-5 w-5 text-teal-500" />
+            <BookOpen className="h-5 w-5 text-[#1877F2]" />
             Documentation
           </Link>
           <div className="pt-6 border-t border-slate-100 dark:border-white/5">
             <Button 
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white h-12 rounded-xl"
+              className="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white h-12 rounded-xl"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 toast.info("Login system is currently being integrated.");
