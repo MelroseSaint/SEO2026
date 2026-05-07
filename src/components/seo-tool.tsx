@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, 
   Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, 
-  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History, Link as LinkIcon
+  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History, Link as LinkIcon, CloudCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +34,7 @@ import AnalysisHistory from "./analysis-history";
 const SEOTool = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [lastId, setLastId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("deterministic");
@@ -85,6 +86,7 @@ const SEOTool = () => {
     setTimeout(async () => {
       setResult(analysisResult);
       setLoading(false);
+      setSyncing(true);
       
       // Persist to Convex
       try {
@@ -94,8 +96,13 @@ const SEOTool = () => {
           plan: currentPlan
         });
         setLastId(id);
+        setSyncing(false);
       } catch (error) {
         console.error("Failed to save analysis:", error);
+        setSyncing(false);
+        toast.error("Sync Failed", {
+          description: "Could not save analysis to backend."
+        });
       }
     }, 600);
   };
@@ -174,6 +181,18 @@ const SEOTool = () => {
                 <CardTitle className="text-xs font-bold text-red-600 uppercase tracking-widest">
                   {loading ? "PROCESSING_CONTEXT..." : "LIVE_ENGINE_READY"}
                 </CardTitle>
+                {syncing && (
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 text-[9px] font-bold animate-pulse">
+                    <RefreshCw className="h-2.5 w-2.5 animate-spin" />
+                    SYNCING_BACKEND
+                  </div>
+                )}
+                {!syncing && lastId && (
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 text-[9px] font-bold">
+                    <CloudCheck className="h-2.5 w-2.5" />
+                    SYNCED
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-4 text-[10px] text-slate-500 font-bold">
                 <div className="flex items-center gap-1"><Activity className="h-3 w-3 text-red-600" /> {liveMetrics.words} WORDS</div>

@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { toast } from "sonner";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import BackendStatus from "../backend-status";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -90,6 +91,9 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="hidden lg:block mr-2">
+            <BackendStatus />
+          </div>
           <ThemeToggle />
           <Button 
             variant="ghost" 
@@ -122,6 +126,9 @@ const Navbar = () => {
         isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
       )}>
         <div className="flex flex-col p-6 gap-6">
+          <div className="flex justify-center pb-4">
+            <BackendStatus />
+          </div>
           {navLinks.map((link) => (
             <button 
               key={link.id}

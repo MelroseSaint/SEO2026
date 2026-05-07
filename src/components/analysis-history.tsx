@@ -3,10 +3,11 @@
 import React from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Card, CardContent } from "@/components/ui/card";
-import { History, Calendar, ArrowRight, Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { History, Calendar, ArrowRight, Loader2, Activity, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 interface AnalysisHistoryProps {
   onSelect: (analysis: any) => void;
@@ -14,8 +15,22 @@ interface AnalysisHistoryProps {
 
 const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
   const history = useQuery(api.analyses.getAnalyses);
+  const health = useQuery(api.health.ping);
+
+  const handleVerifyConnection = () => {
+    if (health?.status === "connected") {
+      toast.success("System Healthy", {
+        description: `Backend responded in ${Date.now() - health.timestamp}ms`
+      });
+    } else {
+      toast.error("System Unreachable", {
+        description: "Could not establish a connection to Convex Cloud."
+      });
+    }
+  };
 
   if (history === undefined) {
+
     return (
       <div className="h-48 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
@@ -34,8 +49,47 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
   }
 
   return (
-    <div className="space-y-4">
-      {history.map((item) => (
+    <div className="space-y-6">
+      <Card className="bg-slate-50/50 dark:bg-white/[0.02] border-slate-200 dark:border-white/5 overflow-hidden">
+        <CardHeader className="py-3 px-4 border-b border-slate-200 dark:border-white/5 flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-[10px] font-bold uppercase text-slate-500 flex items-center gap-2">
+            <Activity className="h-3 w-3 text-blue-600" /> System Health
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            {health?.status === "connected" ? (
+              <span className="flex items-center gap-1 text-[9px] font-bold text-emerald-600 uppercase">
+                <CheckCircle2 className="h-3 w-3" /> Operational
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-[9px] font-bold text-red-600 uppercase">
+                <XCircle className="h-3 w-3" /> Disconnected
+              </span>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="p-4 flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
+              Cloud synchronization is {health?.status === "connected" ? "active" : "inactive"}.
+            </p>
+            <p className="text-[9px] text-slate-400 uppercase font-bold">
+              Endpoint: {import.meta.env.VITE_CONVEX_URL?.split("//")[1]?.split(".")[0] || "Production"}
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 text-[10px] font-bold gap-2 border-blue-500/20 hover:bg-blue-500/5"
+            onClick={handleVerifyConnection}
+          >
+            Verify Connection
+          </Button>
+        </CardContent>
+      </Card>
+
+      <div className="space-y-4">
+        {history.map((item) => (
+
         <Card 
           key={item._id} 
           className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-blue-500/50 transition-colors cursor-pointer group"
