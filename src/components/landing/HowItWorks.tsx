@@ -31,9 +31,9 @@ const HowItWorks = () => {
     <section id="how-it-works" className="py-24 relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">The 2026 SEO Workflow</h2>
-          <p className="text-slate-600 dark:text-slate-400">
-            Traditional SEO is dead. We've built the first platform designed for the era of AI-synthesized search results.
+          <h2 className="text-3xl md:text-5xl font-black mb-4">The 2026 SEO Workflow</h2>
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            Traditional SEO is dead. We've built the first platform designed for the era of AI-synthesized social discovery.
           </p>
         </div>
 
@@ -41,11 +41,11 @@ const HowItWorks = () => {
           {steps.map((step, i) => (
             <div key={i} className="relative group">
               {i < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-indigo-500/50 to-transparent -translate-x-8 z-0" />
+                <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-[#1877F2]/50 to-transparent -translate-x-8 z-0" />
               )}
               <div className="relative z-10 flex flex-col items-center text-center">
-                <div className="h-16 w-16 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6 group-hover:border-indigo-500/50 group-hover:shadow-2xl group-hover:shadow-indigo-500/10 transition-all duration-500">
-                  <div className="text-indigo-600 dark:text-indigo-400">
+                <div className="h-16 w-16 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6 group-hover:border-[#1877F2]/50 group-hover:shadow-2xl group-hover:shadow-[#1877F2]/10 transition-all duration-500">
+                  <div className="text-[#1877F2]">
                     {step.icon}
                   </div>
                 </div>

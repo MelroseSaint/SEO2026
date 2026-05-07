@@ -123,7 +123,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
     <Card className="bg-slate-950 border-slate-800 font-mono text-xs leading-relaxed">
       <div className="p-2 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
         <div className="flex items-center gap-2 px-2">
-          <span className="text-indigo-400 font-bold uppercase tracking-widest">Deterministic Engine Output</span>
+          <span className="text-[#1877F2] font-bold uppercase tracking-widest">Deterministic Engine Output</span>
           <div className="h-4 w-px bg-slate-800 mx-2" />
           <Button 
             variant="ghost" 
@@ -151,7 +151,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
           {view === "formatted" ? (
             <div className="space-y-8 text-slate-300">
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">1. QUERY ANALYSIS</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">1. QUERY ANALYSIS</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Primary Intent:</span> {data.queryAnalysis.primaryIntent}</li>
                   <li><span className="text-slate-500">* Secondary Intent(s):</span> {data.queryAnalysis.secondaryIntents.join(", ")}</li>
@@ -163,7 +163,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">2. AI SEARCH OPTIMIZATION STRATEGY</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">2. AI SEARCH OPTIMIZATION STRATEGY</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Core Topic Entities:</span> {data.aiStrategy.coreEntities.join(", ")}</li>
                   <li><span className="text-slate-500">* Supporting Entities:</span> {data.aiStrategy.supportingEntities.join(", ")}</li>
@@ -175,7 +175,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">3. KEYWORD CLUSTERS</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">3. KEYWORD CLUSTERS</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Primary Cluster:</span> {data.keywordClusters.primary}</li>
                   <li><span className="text-slate-500">* Secondary Clusters:</span> {data.keywordClusters.secondary.join(", ")}</li>
@@ -187,7 +187,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">4. CONTENT STRUCTURE</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">4. CONTENT STRUCTURE</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* H1:</span> {data.contentStructure.h1}</li>
                   <li><span className="text-slate-500">* H2 Sections:</span> {data.contentStructure.h2.join(" | ")}</li>
@@ -199,7 +199,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">5. METADATA GENERATION</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">5. METADATA GENERATION</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Title Tag:</span> {data.metadata.title}</li>
                   <li><span className="text-slate-500">* Meta Description:</span> {data.metadata.description}</li>
@@ -212,7 +212,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">6. AI CITATION OPTIMIZATION</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">6. AI CITATION OPTIMIZATION</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Extractable Statements:</span> {data.aiCitation.statements.join(" | ")}</li>
                   <li><span className="text-slate-500">* Citation-Worthy Facts:</span> {data.aiCitation.facts.join(" | ")}</li>
@@ -223,7 +223,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">7. SCHEMA RECOMMENDATION</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">7. SCHEMA RECOMMENDATION</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Schema Types:</span> {data.schema.types.join(", ")}</li>
                   <li><span className="text-slate-500">* Required Fields:</span> {data.schema.requiredFields.join(", ")}</li>
@@ -233,7 +233,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               <div className="h-px bg-slate-800" />
 
               <section>
-                <h3 className="text-indigo-400 font-bold mb-2">8. COMPETITIVE ANGLE</h3>
+                <h3 className="text-[#1877F2] font-bold mb-2">8. COMPETITIVE ANGLE</h3>
                 <ul className="space-y-1 list-none">
                   <li><span className="text-slate-500">* Likely Competitor Strategy:</span> {data.competitive.strategy}</li>
                   <li><span className="text-slate-500">* Differentiation Opportunity:</span> {data.competitive.differentiation}</li>
@@ -242,7 +242,7 @@ const DeterministicOutput = ({ data }: { data: DeterministicData }) => {
               </section>
             </div>
           ) : (
-            <pre className="text-indigo-300 text-[10px] leading-tight">
+            <pre className="text-blue-300 text-[10px] leading-tight">
               {JSON.stringify(data, null, 2)}
             </pre>
           )}
