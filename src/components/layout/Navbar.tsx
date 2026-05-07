@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn, LogOut, User } from "lucide-react";
+import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import BackendStatus from "@/components/backend-status";
@@ -37,6 +37,9 @@ const Navbar = () => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      // Fallback if section doesn't exist
+      navigate("/signup");
     }
   };
 
@@ -109,7 +112,7 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 overflow-hidden border border-slate-200 dark:border-white/10">
                   <div className="h-full w-full bg-blue-500/10 flex items-center justify-center text-[#1877F2] font-bold">
-                    {user.name.charAt(0).toUpperCase()}
+                    {user.name?.charAt(0).toUpperCase() || "U"}
                   </div>
                 </Button>
               </DropdownMenuTrigger>
@@ -147,7 +150,7 @@ const Navbar = () => {
                 Log in
               </Button>
               <Button 
-                onClick={() => isDocsPage || isAuthPage ? navigate("/#tool") : scrollToSection('tool')}
+                onClick={() => navigate("/signup")}
                 className="bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-lg shadow-blue-500/20 rounded-lg"
               >
                 Get Started
