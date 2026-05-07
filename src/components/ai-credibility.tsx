@@ -1,18 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldCheck, Award, BookOpen, UserCheck, AlertCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 
-const AICredibility = () => {
-  const metrics = [
-    { label: "Expertise Signal", score: 82, icon: <Award className="h-4 w-4 text-amber-500" />, description: "Depth of technical terminology and unique insights." },
-    { label: "Authoritativeness", score: 64, icon: <ShieldCheck className="h-4 w-4 text-blue-500" />, description: "Cross-reference potential with known high-authority domains." },
-    { label: "Trustworthiness", score: 91, icon: <UserCheck className="h-4 w-4 text-emerald-500" />, description: "Transparency of data sources and citation clarity." },
-    { label: "Experience (First-hand)", score: 45, icon: <BookOpen className="h-4 w-4 text-purple-500" />, description: "Presence of personal anecdotes or proprietary case studies." }
-  ];
+interface AICredibilityProps {
+  input: string;
+}
+
+const AICredibility = ({ input }: { input: string }) => {
+  const metrics = useMemo(() => {
+    const words = input.trim().split(/\s+/).length;
+    const entities = (input.match(/[A-Z][a-z]+/g) || []).length;
+    
+    const expertise = Math.min(40 + (entities * 5), 95);
+    const authority = Math.min(30 + (words / 20), 90);
+    const trust = input.includes("http") || input.includes("source") ? 85 : 60;
+    const experience = input.toLowerCase().includes("i ") || input.toLowerCase().includes("my ") ? 80 : 40;
+
+    return [
+      { label: "Expertise Signal", score: expertise, icon: <Award className="h-4 w-4 text-amber-500" />, description: "Depth of technical terminology and unique insights." },
+      { label: "Authoritativeness", score: authority, icon: <ShieldCheck className="h-4 w-4 text-blue-500" />, description: "Cross-reference potential with known high-authority domains." },
+      { label: "Trustworthiness", score: trust, icon: <UserCheck className="h-4 w-4 text-emerald-500" />, description: "Transparency of data sources and citation clarity." },
+      { label: "Experience (First-hand)", score: experience, icon: <BookOpen className="h-4 w-4 text-purple-500" />, description: "Presence of personal anecdotes or proprietary case studies." }
+    ];
+  }, [input]);
+
+  const avgScore = Math.round(metrics.reduce((acc, m) => acc + m.score, 0) / metrics.length);
 
   return (
     <div className="space-y-6">
@@ -49,26 +64,28 @@ const AICredibility = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-black mb-2">78%</div>
+              <div className="text-3xl font-black mb-2">{avgScore}%</div>
               <p className="text-xs text-slate-600 dark:text-gray-400">
-                Your content has a high probability of being used as a primary source for "Zero-Click" AI summaries.
+                Your content has a {avgScore > 70 ? 'high' : 'moderate'} probability of being used as a primary source for "Zero-Click" AI summaries.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-amber-500/5 border-amber-500/20">
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400">Improvement Required</h4>
-                  <p className="text-xs text-slate-600 dark:text-gray-400 mt-1">
-                    To boost your "Experience" score, add more first-person data points or specific results from internal testing. AI models in 2026 prioritize "human-in-the-loop" verification.
-                  </p>
+          {avgScore < 75 && (
+            <Card className="bg-amber-500/5 border-amber-500/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400">Improvement Required</h4>
+                    <p className="text-xs text-slate-600 dark:text-gray-400 mt-1">
+                      To boost your score, add more first-person data points or specific results from internal testing. AI models in 2026 prioritize "human-in-the-loop" verification.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

@@ -26,8 +26,8 @@ const ComplianceAuditor = ({ data }: ComplianceAuditorProps) => {
     { 
       id: "CIT_01", 
       name: "Citation Readiness", 
-      status: data.aiCitation.facts.length >= 2 ? "PASS" : "FAIL",
-      desc: "Minimum 2 verifiable facts required for LLM extraction."
+      status: data.aiCitation.facts.length >= 1 ? "PASS" : "FAIL",
+      desc: "Minimum 1 verifiable fact required for LLM extraction."
     },
     { 
       id: "INT_01", 

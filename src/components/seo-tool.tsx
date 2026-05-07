@@ -44,7 +44,6 @@ const SEOTool = () => {
     
     syncPlan();
     window.addEventListener('storage', syncPlan);
-    // Polling as a fallback for same-window updates
     const interval = setInterval(syncPlan, 1000);
     
     return () => {
@@ -248,7 +247,7 @@ const SEOTool = () => {
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               {activeTab === "deterministic" && <DeterministicOutput data={result} />}
               {activeTab === "audit" && <ComplianceAuditor data={result} />}
-              {activeTab === "credibility" && <AICredibility />}
+              {activeTab === "credibility" && <AICredibility input={input} />}
               {activeTab === "simulation" && <AISimulation input={input} />}
               {activeTab === "intent" && <IntentMapping input={input} />}
               {activeTab === "structure" && <ContentStructure input={input} />}
@@ -257,7 +256,7 @@ const SEOTool = () => {
               {activeTab === "refresh" && <RefreshIntelligence />}
               {activeTab === "generator" && <PromptGenerator />}
               {activeTab === "schema" && <SchemaBuilder />}
-              {activeTab === "graph" && <LinkingGraph />}
+              {activeTab === "graph" && <LinkingGraph data={result} />}
               {activeTab === "competitors" && <CompetitorAnalysis />}
             </div>
           </div>

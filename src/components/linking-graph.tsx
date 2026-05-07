@@ -1,23 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Share2, ArrowUpRight, Anchor, AlertCircle, Link2 } from "lucide-react";
+import { Share2, ArrowUpRight, Anchor, Link2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const LinkingGraph = () => {
+interface LinkingGraphProps {
+  data: any;
+}
+
+const LinkingGraph = ({ data }: LinkingGraphProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
+    const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [data]);
 
-  const suggestions = [
-    { from: "/blog/ai-basics", to: "/products/ai-tool", type: "Transactional Boost" },
-    { from: "/home", to: "/case-studies/fashion", type: "Authority Flow" },
-    { from: "/services", to: "/contact", type: "Conversion Path" }
-  ];
+  const suggestions = useMemo(() => {
+    const entities = data.aiStrategy.coreEntities;
+    return [
+      { from: "/blog/ai-basics", to: `/topic/${entities[0]?.toLowerCase() || 'general'}`, type: "Transactional Boost" },
+      { from: "/home", to: `/case-studies/${entities[1]?.toLowerCase() || 'success'}`, type: "Authority Flow" },
+      { from: "/services", to: "/contact", type: "Conversion Path" }
+    ];
+  }, [data]);
 
   return (
     <div className="space-y-6">
@@ -27,7 +34,7 @@ const LinkingGraph = () => {
             <CardTitle className="text-[10px] uppercase text-slate-500">Authority Hubs</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">12</p>
+            <p className="text-2xl font-bold">{data.aiStrategy.coreEntities.length + 2}</p>
             <p className="text-[10px] text-emerald-500 flex items-center gap-1">
               <ArrowUpRight className="h-3 w-3" /> +2 this month
             </p>
@@ -38,7 +45,7 @@ const LinkingGraph = () => {
             <CardTitle className="text-[10px] uppercase text-slate-500">Orphan Pages</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-red-500">4</p>
+            <p className="text-2xl font-bold text-red-500">{data.aiStrategy.gaps.length}</p>
             <p className="text-[10px] text-slate-500">Needs immediate linking</p>
           </CardContent>
         </Card>
@@ -47,7 +54,7 @@ const LinkingGraph = () => {
             <CardTitle className="text-[10px] uppercase text-slate-500">Link Density</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">4.2</p>
+            <p className="text-2xl font-bold">{(data.aiStrategy.coreEntities.length * 1.2).toFixed(1)}</p>
             <p className="text-[10px] text-slate-500">Links per 1k words</p>
           </CardContent>
         </Card>
@@ -66,7 +73,7 @@ const LinkingGraph = () => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 border-2 border-purple-500/30 rounded-full" />
             </div>
             <div className="relative z-10 grid grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
+              {data.aiStrategy.coreEntities.map((entity: string, i: number) => (
                 <div key={i} className="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-xl shadow-indigo-500/40 animate-bounce" style={{ animationDelay: `${i * 0.2}s` }}>
                   <Link2 className="h-4 w-4 text-white" />
                 </div>
