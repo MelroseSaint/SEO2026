@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import AuthMonster from "./AuthMonster";
 
 const authSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -34,6 +34,8 @@ interface AuthFormProps {
 }
 
 const AuthForm = ({ type }: AuthFormProps) => {
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
     defaultValues: {
@@ -42,6 +44,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
       ...(type === "signup" ? { name: "" } : {}),
     },
   });
+
+  const emailValue = form.watch("email") || "";
 
   const onSubmit = (data: AuthFormValues) => {
     console.log(`${type} data:`, data);
@@ -53,11 +57,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
   return (
     <Card className="w-full max-w-md border-slate-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] shadow-2xl rounded-[2rem] overflow-hidden">
       <CardHeader className="space-y-1 pt-8 text-center">
-        <div className="flex justify-center mb-4">
-          <div className="h-12 w-12 bg-[#1877F2] rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Sparkles className="h-6 w-6 text-white" />
-          </div>
-        </div>
+        <AuthMonster isPasswordFocused={isPasswordFocused} emailValue={emailValue} />
         <CardTitle className="text-3xl font-black tracking-tight">
           {type === "login" ? "Welcome Back" : "Create Account"}
         </CardTitle>
@@ -78,7 +78,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
                   <FormItem>
                     <FormLabel className="text-xs font-bold uppercase tracking-widest text-slate-500">Full Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" className="rounded-xl h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10" {...field} />
+                      <Input 
+                        placeholder="John Doe" 
+                        className="rounded-xl h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10" 
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage className="text-[10px]" />
                   </FormItem>
@@ -92,7 +96,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 <FormItem>
                   <FormLabel className="text-xs font-bold uppercase tracking-widest text-slate-500">Email Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="name@example.com" className="rounded-xl h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10" {...field} />
+                    <Input 
+                      placeholder="name@example.com" 
+                      className="rounded-xl h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10" 
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="text-[10px]" />
                 </FormItem>
@@ -105,7 +113,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
                 <FormItem>
                   <FormLabel className="text-xs font-bold uppercase tracking-widest text-slate-500">Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" className="rounded-xl h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10" {...field} />
+                    <Input 
+                      type="password" 
+                      placeholder="••••••••" 
+                      className="rounded-xl h-12 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10" 
+                      {...field}
+                      onFocus={() => setIsPasswordFocused(true)}
+                      onBlur={() => setIsPasswordFocused(false)}
+                    />
                   </FormControl>
                   <FormMessage className="text-[10px]" />
                 </FormItem>
