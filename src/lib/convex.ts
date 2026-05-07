@@ -1,5 +1,5 @@
 import { ConvexReactClient } from "convex/react";
 
-// Using the provided URL as a fallback, but preferring the environment variable
+// Prioritize the provided URL to ensure connection to the correct backend
 const convexUrl = import.meta.env.VITE_CONVEX_URL || "https://compassionate-bass-55.convex.cloud/";
 export const convex = new ConvexReactClient(convexUrl);

@@ -1,17 +1,35 @@
 "use client";
 
-import React from "react";
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import React, { useEffect, useState } from "react";
+import { useConvex } from "convex/react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Wifi, WifiOff, Loader2 } from "lucide-react";
 
 const BackendStatus = () => {
-  const health = useQuery(api.health.ping);
-  const isConnected = health?.status === "connected";
-  const isLoading = health === undefined;
+  const convex = useConvex();
+  const [status, setStatus] = useState<{ isConnected: boolean; isTransitioning: boolean }>({
+    isConnected: false,
+    isTransitioning: true,
+  });
+
+  useEffect(() => {
+    const checkConnection = () => {
+      const state = convex.connectionState();
+      setStatus({
+        isConnected: state.isWebSocketConnected,
+        isTransitioning: false,
+      });
+    };
+
+    checkConnection();
+    const interval = setInterval(checkConnection, 2000);
+    return () => clearInterval(interval);
+  }, [convex]);
+
+  const isConnected = status.isConnected;
+  const isLoading = status.isTransitioning;
 
   return (
     <TooltipProvider>
@@ -51,7 +69,7 @@ const BackendStatus = () => {
         </TooltipTrigger>
         <TooltipContent className="text-[10px] font-bold uppercase p-2">
           {isLoading ? "Verifying backend connection..." : 
-           isConnected ? `Connected to Convex Cloud (Last Ping: ${new Date(health.timestamp).toLocaleTimeString()})` : 
+           isConnected ? "Connected to Convex Cloud (WebSocket Active)" : 
            "Unable to reach Convex Cloud. Local analysis only."}
         </TooltipContent>
       </Tooltip>

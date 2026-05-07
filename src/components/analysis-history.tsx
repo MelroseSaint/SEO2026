@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { useQuery } from "convex/react";
+import React, { useEffect, useState } from "react";
+import { useConvex, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { History, Calendar, ArrowRight, Loader2, Activity, CheckCircle2, XCircle } from "lucide-react";
@@ -14,13 +14,21 @@ interface AnalysisHistoryProps {
 }
 
 const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
+  const convex = useConvex();
   const history = useQuery(api.analyses.getAnalyses);
-  const health = useQuery(api.health.ping);
+  const [isConnected, setIsConnected] = useState(convex.connectionState().isWebSocketConnected);
+
+  useEffect(() => {
+    const unsubscribe = convex.watchConnectionState((state) => {
+      setIsConnected(state.isWebSocketConnected);
+    });
+    return () => unsubscribe();
+  }, [convex]);
 
   const handleVerifyConnection = () => {
-    if (health?.status === "connected") {
+    if (isConnected) {
       toast.success("System Healthy", {
-        description: `Backend responded in ${Date.now() - health.timestamp}ms`
+        description: "Backend connection is active and operational."
       });
     } else {
       toast.error("System Unreachable", {
@@ -30,6 +38,7 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
   };
 
   if (history === undefined) {
+
     return (
       <div className="h-48 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
@@ -55,7 +64,7 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
             <Activity className="h-3 w-3 text-blue-600" /> System Health
           </CardTitle>
           <div className="flex items-center gap-2">
-            {health?.status === "connected" ? (
+            {isConnected ? (
               <span className="flex items-center gap-1 text-[9px] font-bold text-emerald-600 uppercase">
                 <CheckCircle2 className="h-3 w-3" /> Operational
               </span>
@@ -69,8 +78,9 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
-              Cloud synchronization is {health?.status === "connected" ? "active" : "inactive"}.
+              Cloud synchronization is {isConnected ? "active" : "inactive"}.
             </p>
+
             <p className="text-[9px] text-slate-400 uppercase font-bold">
               Endpoint: {import.meta.env.VITE_CONVEX_URL?.split("//")[1]?.split(".")[0] || "Production"}
             </p>
