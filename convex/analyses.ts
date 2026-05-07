@@ -4,6 +4,7 @@ import { v } from "convex/values";
 export const saveAnalysis = mutation({
   args: {
     userId: v.optional(v.id("users")),
+    projectId: v.optional(v.id("projects")),
     input: v.string(),
     result: v.any(),
     plan: v.string(),
@@ -11,6 +12,7 @@ export const saveAnalysis = mutation({
   handler: async (ctx, args) => {
     const id = await ctx.db.insert("analyses", {
       userId: args.userId,
+      projectId: args.projectId,
       input: args.input,
       result: args.result,
       plan: args.plan,

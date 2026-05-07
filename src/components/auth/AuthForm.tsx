@@ -92,7 +92,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
           email: user.email,
         });
         toast.success(`Welcome back, ${user.name}!`);
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Authentication failed";
