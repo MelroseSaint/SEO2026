@@ -6,13 +6,6 @@ SEO2026 is a next-generation discovery engine optimization platform built for th
 
 ---
 
-## Live Demo
-
-- **Frontend:** [https://seo-sable-seven.vercel.app](https://seo-sable-seven.vercel.app)
-- **Backend:** [https://compassionate-bass-55.convex.cloud](https://compassionate-bass-55.convex.cloud)
-
----
-
 ## Tech Stack
 
 | Layer | Technology |
