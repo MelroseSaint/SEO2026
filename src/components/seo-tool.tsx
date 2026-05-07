@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
-  Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, 
-  Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, 
-  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History, Link as LinkIcon, CloudCheck
+  Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree,
+  Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2,
+  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History, Link as LinkIcon, CheckCircle
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -88,6 +89,10 @@ const SEOTool = () => {
       setLoading(false);
       setSyncing(true);
       
+      const syncToastId = toast.loading("Syncing to Cloud...", {
+        description: "Saving your analysis to Convex backend."
+      });
+
       // Persist to Convex
       try {
         const id = await saveToConvex({
@@ -97,14 +102,24 @@ const SEOTool = () => {
         });
         setLastId(id);
         setSyncing(false);
+        toast.success("Synced to Cloud", {
+          id: syncToastId,
+          description: `Analysis saved successfully (ID: ${id.substring(0, 8)}...)`
+        });
       } catch (error) {
         console.error("Failed to save analysis:", error);
         setSyncing(false);
-        toast.error("Sync Failed", {
-          description: "Could not save analysis to backend."
+        toast.error("Cloud Sync Failed", {
+          id: syncToastId,
+          description: "Analysis is available locally but wasn't saved to the cloud.",
+          action: {
+            label: "Retry Sync",
+            onClick: () => executeEngine(trimmedInput)
+          }
         });
       }
     }, 600);
+
   };
 
   useEffect(() => {
@@ -189,10 +204,11 @@ const SEOTool = () => {
                 )}
                 {!syncing && lastId && (
                   <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 text-[9px] font-bold">
-                    <CloudCheck className="h-2.5 w-2.5" />
+                    <CheckCircle className="h-2.5 w-2.5" />
                     SYNCED
                   </div>
                 )}
+
               </div>
               <div className="flex items-center gap-4 text-[10px] text-slate-500 font-bold">
                 <div className="flex items-center gap-1"><Activity className="h-3 w-3 text-red-600" /> {liveMetrics.words} WORDS</div>

@@ -30,7 +30,6 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
   };
 
   if (history === undefined) {
-
     return (
       <div className="h-48 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
@@ -76,9 +75,9 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
               Endpoint: {import.meta.env.VITE_CONVEX_URL?.split("//")[1]?.split(".")[0] || "Production"}
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
+          <Button 
+            variant="outline" 
+            size="sm" 
             className="h-8 text-[10px] font-bold gap-2 border-blue-500/20 hover:bg-blue-500/5"
             onClick={handleVerifyConnection}
           >
@@ -89,34 +88,34 @@ const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
 
       <div className="space-y-4">
         {history.map((item) => (
-
-        <Card 
-          key={item._id} 
-          className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-blue-500/50 transition-colors cursor-pointer group"
-          onClick={() => onSelect(item)}
-        >
-          <CardContent className="p-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <History className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm font-bold line-clamp-1 max-w-[200px] md:max-w-md">
-                  {item.input}
-                </p>
-                <div className="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase">
-                  <Calendar className="h-3 w-3" />
-                  {format(item.timestamp, "MMM d, yyyy • HH:mm")}
-                  <span className="text-blue-600">• {item.plan}</span>
+          <Card 
+            key={item._id} 
+            className="bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-blue-500/50 transition-colors cursor-pointer group"
+            onClick={() => onSelect(item)}
+          >
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <History className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold line-clamp-1 max-w-[200px] md:max-w-md">
+                    {item.input}
+                  </p>
+                  <div className="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase">
+                    <Calendar className="h-3 w-3" />
+                    {format(item.timestamp, "MMM d, yyyy • HH:mm")}
+                    <span className="text-blue-600">• {item.plan}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-              Load <ArrowRight className="ml-2 h-3 w-3" />
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+              <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                Load <ArrowRight className="ml-2 h-3 w-3" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

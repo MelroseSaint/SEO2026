@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import BackendStatus from "@/components/backend-status";
 import { toast } from "sonner";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import BackendStatus from "../backend-status";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -91,9 +91,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden lg:block mr-2">
-            <BackendStatus />
-          </div>
+          <BackendStatus />
           <ThemeToggle />
           <Button 
             variant="ghost" 
@@ -126,9 +124,6 @@ const Navbar = () => {
         isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
       )}>
         <div className="flex flex-col p-6 gap-6">
-          <div className="flex justify-center pb-4">
-            <BackendStatus />
-          </div>
           {navLinks.map((link) => (
             <button 
               key={link.id}
@@ -147,7 +142,11 @@ const Navbar = () => {
             <BookOpen className="h-5 w-5 text-[#1877F2]" />
             Documentation
           </Link>
-          <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+          <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <span className="text-[10px] font-bold uppercase text-slate-500">System Status</span>
+              <BackendStatus />
+            </div>
             <Button 
               className="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white h-12 rounded-xl"
               onClick={() => {
