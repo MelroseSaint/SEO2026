@@ -15,6 +15,16 @@ const BackendStatus = () => {
   });
 
   useEffect(() => {
+    // Trigger a connection attempt safely
+    const trigger = async () => {
+      try {
+        // We use a string to avoid any generated code issues
+        // and we catch the error so it doesn't crash the component
+        await convex.query("analyses:getAnalysesSimple").catch(() => {});
+      } catch (e) {}
+    };
+    trigger();
+
     const checkConnection = () => {
       const state = convex.connectionState();
       setStatus({

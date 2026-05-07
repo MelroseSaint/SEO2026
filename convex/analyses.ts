@@ -28,6 +28,12 @@ export const getAnalyses = query({
   },
 });
 
+export const getAnalysesSimple = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("analyses").collect();
+  },
+});
+
 export const getAnalysisById = query({
   args: { id: v.id("analyses") },
   handler: async (ctx, args) => {
