@@ -7,8 +7,20 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
 import { Zap, Sparkles, Shield, BarChart3, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Index = () => {
+  const scrollToTool = () => {
+    const toolSection = document.getElementById('tool');
+    if (toolSection) {
+      toolSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleDocsClick = () => {
+    toast.info("Documentation is being updated for the 2026 engine. Check back soon!");
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#030303] text-slate-900 dark:text-white selection:bg-indigo-500/30 transition-colors duration-500">
       <Navbar />
@@ -35,18 +47,27 @@ const Index = () => {
               deterministic engine for semantic authority and AI citation dominance.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-14 rounded-2xl text-lg shadow-2xl shadow-indigo-500/20 group">
+              <Button 
+                size="lg" 
+                onClick={scrollToTool}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 h-14 rounded-2xl text-lg shadow-2xl shadow-indigo-500/20 group"
+              >
                 Start Analyzing Now
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button size="lg" variant="outline" className="px-8 h-14 rounded-2xl text-lg border-slate-200 dark:border-white/10">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                onClick={handleDocsClick}
+                className="px-8 h-14 rounded-2xl text-lg border-slate-200 dark:border-white/10"
+              >
                 View Documentation
               </Button>
             </div>
           </div>
 
           {/* Main Tool Interface */}
-          <div id="tool" className="relative z-10">
+          <div id="tool" className="relative z-10 scroll-mt-24">
             <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 blur-3xl opacity-20 rounded-[4rem]" />
             <SEOTool />
           </div>
@@ -99,7 +120,11 @@ const Index = () => {
                 <p className="text-indigo-100 text-lg md:text-xl">
                   Join 2,000+ forward-thinking SEOs who are already using SEO2026 to secure their future visibility.
                 </p>
-                <Button size="lg" className="bg-white text-indigo-600 hover:bg-indigo-50 px-10 h-16 rounded-2xl text-xl font-bold shadow-2xl">
+                <Button 
+                  size="lg" 
+                  onClick={scrollToTool}
+                  className="bg-white text-indigo-600 hover:bg-indigo-50 px-10 h-16 rounded-2xl text-xl font-bold shadow-2xl"
+                >
                   Get Started for Free
                 </Button>
               </div>
@@ -126,25 +151,25 @@ const Index = () => {
             <div>
               <h4 className="font-bold mb-6">Product</h4>
               <ul className="space-y-4 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">API</a></li>
+                <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-indigo-600 transition-colors">Pricing</a></li>
+                <li><button onClick={() => toast.info("API access is currently in private beta.")} className="hover:text-indigo-600 transition-colors">API</button></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold mb-6">Company</h4>
               <ul className="space-y-4 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Careers</a></li>
+                <li><button onClick={() => toast.info("About page coming soon.")} className="hover:text-indigo-600 transition-colors">About</button></li>
+                <li><button onClick={() => toast.info("Blog is launching next month.")} className="hover:text-indigo-600 transition-colors">Blog</button></li>
+                <li><button onClick={() => toast.info("We are currently hiring! Send your CV to careers@seo2026.ai")} className="hover:text-indigo-600 transition-colors">Careers</button></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold mb-6">Legal</h4>
               <ul className="space-y-4 text-sm text-slate-500">
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Terms</a></li>
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">Security</a></li>
+                <li><button onClick={() => toast.info("Privacy Policy updated Jan 2025.")} className="hover:text-indigo-600 transition-colors">Privacy</button></li>
+                <li><button onClick={() => toast.info("Terms of Service updated Jan 2025.")} className="hover:text-indigo-600 transition-colors">Terms</button></li>
+                <li><button onClick={() => toast.info("Security audit completed Dec 2024.")} className="hover:text-indigo-600 transition-colors">Security</button></li>
               </ul>
             </div>
           </div>

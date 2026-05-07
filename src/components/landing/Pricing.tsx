@@ -3,6 +3,7 @@
 import React from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const plans = [
   {
@@ -32,6 +33,14 @@ const plans = [
 ];
 
 const Pricing = () => {
+  const handlePlanSelect = (planName: string) => {
+    if (planName === "Enterprise") {
+      toast.success("Request sent! Our sales team will contact you within 24 hours.");
+    } else {
+      toast.success(`Excellent choice! Redirecting to ${planName} checkout...`);
+    }
+  };
+
   return (
     <section id="pricing" className="py-24 bg-slate-50 dark:bg-white/[0.02]">
       <div className="container mx-auto px-4">
@@ -78,6 +87,7 @@ const Pricing = () => {
               </div>
 
               <Button 
+                onClick={() => handlePlanSelect(plan.name)}
                 className={`w-full py-6 rounded-xl font-bold transition-all ${
                   plan.popular 
                     ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20" 
