@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Github, Mail, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -68,26 +68,6 @@ const AuthForm = ({ type }: AuthFormProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-        <div className="grid grid-cols-2 gap-4">
-          <Button variant="outline" className="rounded-xl h-12 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5" onClick={() => toast.info("GitHub auth coming soon")}>
-            <Github className="mr-2 h-4 w-4" />
-            Github
-          </Button>
-          <Button variant="outline" className="rounded-xl h-12 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5" onClick={() => toast.info("Google auth coming soon")}>
-            <Mail className="mr-2 h-4 w-4" />
-            Google
-          </Button>
-        </div>
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-slate-200 dark:border-white/10" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white dark:bg-[#1a1a1a] px-2 text-slate-500 font-bold tracking-widest">
-              Or continue with
-            </span>
-          </div>
-        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {type === "signup" && (
