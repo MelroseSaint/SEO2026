@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Info, ShoppingCart, ArrowRightLeft, MapPin, CheckCircle2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -10,11 +10,27 @@ interface IntentMappingProps {
 }
 
 const IntentMapping = ({ input }: IntentMappingProps) => {
+  const topic = input.trim().split('\n')[0].slice(0, 30) || "Topic";
+  
+  const scores = useMemo(() => {
+    const text = input.toLowerCase();
+    const isTransactional = text.match(/buy|price|cost|order|purchase|hire|service|pricing/);
+    const isInformational = text.match(/how|what|why|guide|tutorial|learn|definition|meaning/);
+    const isComparative = text.match(/vs|versus|better|best|alternative|review|comparison/);
+    
+    return {
+      info: isInformational ? 85 : 40,
+      trans: isTransactional ? 90 : 20,
+      comp: isComparative ? 80 : 35,
+      nav: text.length > 0 ? 15 : 5
+    };
+  }, [input]);
+
   const intents = [
-    { type: "Informational", icon: <Info className="h-4 w-4" />, score: 85, strategy: "How-to guides, definitions, and deep-dives." },
-    { type: "Transactional", icon: <ShoppingCart className="h-4 w-4" />, score: 45, strategy: "Product pages, pricing tables, and CTAs." },
-    { type: "Comparative", icon: <ArrowRightLeft className="h-4 w-4" />, score: 65, strategy: "Vs articles, top 10 lists, and feature grids." },
-    { type: "Navigational", icon: <MapPin className="h-4 w-4" />, score: 20, strategy: "Brand keywords and login/portal access." }
+    { type: "Informational", icon: <Info className="h-4 w-4" />, score: scores.info, strategy: "How-to guides, definitions, and deep-dives." },
+    { type: "Transactional", icon: <ShoppingCart className="h-4 w-4" />, score: scores.trans, strategy: "Product pages, pricing tables, and CTAs." },
+    { type: "Comparative", icon: <ArrowRightLeft className="h-4 w-4" />, score: scores.comp, strategy: "Vs articles, top 10 lists, and feature grids." },
+    { type: "Navigational", icon: <MapPin className="h-4 w-4" />, score: scores.nav, strategy: "Brand keywords and login/portal access." }
   ];
 
   return (
@@ -43,13 +59,13 @@ const IntentMapping = ({ input }: IntentMappingProps) => {
         <CardContent className="pt-6">
           <h4 className="font-bold mb-4 flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-indigo-500" />
-            Recommended Content Structure
+            Recommended Content Structure for "{topic}"
           </h4>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <p className="text-sm font-semibold">Primary Focus</p>
               <ul className="text-xs space-y-1 text-slate-600 dark:text-gray-400">
-                <li>• Comprehensive "What is {input}" section</li>
+                <li>• Comprehensive "What is {topic}" section</li>
                 <li>• Comparison with 3 major competitors</li>
                 <li>• Interactive ROI or Value calculator</li>
               </ul>

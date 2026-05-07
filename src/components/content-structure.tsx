@@ -10,6 +10,8 @@ interface ContentStructureProps {
 }
 
 const ContentStructure = ({ input }: ContentStructureProps) => {
+  const topic = input.trim().split('\n')[0].slice(0, 40) || "Your Topic";
+  
   return (
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
@@ -24,12 +26,12 @@ const ContentStructure = ({ input }: ContentStructureProps) => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Badge variant="outline">H1</Badge>
-                <span className="text-sm font-bold">The Definitive Guide to {input} in 2026</span>
+                <span className="text-sm font-bold">The Definitive Guide to {topic} in 2026</span>
               </div>
               <div className="ml-4 space-y-2 border-l-2 border-slate-100 dark:border-white/5 pl-4">
                 <div className="flex items-center gap-2">
                   <Badge variant="outline">H2</Badge>
-                  <span className="text-xs">Executive Summary: Why {input} Matters Now</span>
+                  <span className="text-xs">Executive Summary: Why {topic} Matters Now</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline">H2</Badge>
@@ -37,7 +39,7 @@ const ContentStructure = ({ input }: ContentStructureProps) => {
                 </div>
                 <div className="ml-4 flex items-center gap-2">
                   <Badge variant="outline">H3</Badge>
-                  <span className="text-xs">The Role of AI in {input} Evolution</span>
+                  <span className="text-xs">The Role of AI in {topic} Evolution</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline">H2</Badge>
@@ -58,12 +60,12 @@ const ContentStructure = ({ input }: ContentStructureProps) => {
           <CardContent className="space-y-3">
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
               <p className="text-[10px] font-bold text-indigo-500 uppercase mb-1">Question</p>
-              <p className="text-xs font-semibold">What are the primary benefits of {input}?</p>
+              <p className="text-xs font-semibold">What are the primary benefits of {topic}?</p>
               <p className="text-[10px] text-slate-500 mt-2">Optimized for: Google AI Overview & Perplexity</p>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
               <p className="text-[10px] font-bold text-indigo-500 uppercase mb-1">Question</p>
-              <p className="text-xs font-semibold">How does {input} impact traditional SEO workflows?</p>
+              <p className="text-xs font-semibold">How does {topic} impact traditional SEO workflows?</p>
               <p className="text-[10px] text-slate-500 mt-2">Optimized for: ChatGPT Citation Engine</p>
             </div>
           </CardContent>
@@ -79,7 +81,7 @@ const ContentStructure = ({ input }: ContentStructureProps) => {
         </CardHeader>
         <CardContent>
           <p className="text-xs text-slate-600 dark:text-gray-400">
-            Your section hierarchy is highly optimized for LLM parsing. The use of clear H2/H3 tags combined with bulleted summaries ensures that AI agents can easily extract and cite your content.
+            Your section hierarchy for "{topic}" is highly optimized for LLM parsing. The use of clear H2/H3 tags combined with bulleted summaries ensures that AI agents can easily extract and cite your content.
           </p>
         </CardContent>
       </Card>

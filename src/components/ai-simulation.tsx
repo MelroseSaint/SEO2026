@@ -10,25 +10,27 @@ interface AISimulationProps {
 }
 
 const AISimulation = ({ input }: AISimulationProps) => {
+  const topic = input.trim().split('\n')[0].slice(0, 50) || "your topic";
+  
   const simulations = [
     {
       name: "ChatGPT-5 Style",
       icon: <MessageSquare className="h-4 w-4 text-emerald-500" />,
-      summary: `The user is looking for ${input}. I would prioritize explaining the "why" behind the concept and providing a step-by-step implementation guide.`,
+      summary: `The user is inquiring about "${topic}". I would prioritize a comprehensive explanation of the underlying principles, followed by a structured implementation framework and potential ROI impact.`,
       sentiment: "Educational / Analytical",
       citationLikelihood: "High"
     },
     {
       name: "Perplexity Style",
       icon: <Zap className="h-4 w-4 text-blue-500" />,
-      summary: `Direct answer: ${input} is a trending topic. Key sources would include industry reports and real-time data. I would cite 4-5 authoritative domains.`,
+      summary: `Direct answer: "${topic}" is a critical component of modern strategy. Key sources would include recent industry whitepapers and real-time performance data. I would cite 4-5 authoritative domains to verify these claims.`,
       sentiment: "Factual / Concise",
       citationLikelihood: "Very High"
     },
     {
       name: "Google AI Overview",
       icon: <Search className="h-4 w-4 text-red-500" />,
-      summary: `I would generate a "Zero-Click" summary highlighting the core definition of ${input} and provide a "People Also Ask" section immediately below.`,
+      summary: `I would generate a "Zero-Click" summary highlighting the core definition of "${topic}" and provide a "People Also Ask" section focusing on cost, implementation time, and best practices.`,
       sentiment: "Direct / Utility",
       citationLikelihood: "Medium"
     }
