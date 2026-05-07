@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useConvex } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -18,9 +19,8 @@ const BackendStatus = () => {
     // Trigger a connection attempt safely
     const trigger = async () => {
       try {
-        // We use a string to avoid any generated code issues
-        // and we catch the error so it doesn't crash the component
-        await convex.query("analyses:getAnalysesSimple").catch(() => {});
+        // We use the api object for type safety
+        await convex.query(api.health.ping).catch(() => {});
       } catch (e) {}
     };
     trigger();

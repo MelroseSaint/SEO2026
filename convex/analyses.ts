@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
+// Analysis functions for SEO and content optimization
 export const saveAnalysis = mutation({
   args: {
     input: v.string(),
