@@ -1,7 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Analysis functions for SEO and content optimization
 export const saveAnalysis = mutation({
   args: {
     input: v.string(),
@@ -26,12 +25,6 @@ export const getAnalyses = query({
       .withIndex("by_timestamp")
       .order("desc")
       .take(20);
-  },
-});
-
-export const getAnalysesSimple = query({
-  handler: async (ctx) => {
-    return await ctx.db.query("analyses").collect();
   },
 });
 

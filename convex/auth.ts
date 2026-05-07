@@ -18,8 +18,8 @@ export const signup = mutation({
       throw new Error("User already exists with this email.");
     }
 
-    // Military-grade password hashing
-    const salt = await bcrypt.genSalt(12);
+    // Hash password before storing
+    const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(args.password, salt);
 
     const userId = await ctx.db.insert("users", {
