@@ -94,7 +94,6 @@ const Index = () => {
         <section className="py-24">
           <div className="container mx-auto px-4">
             <div className="relative p-12 md:p-20 rounded-[3rem] bg-indigo-600 overflow-hidden text-center text-white">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
               <div className="relative z-10 max-w-3xl mx-auto space-y-8">
                 <h2 className="text-4xl md:text-6xl font-black">Ready to lead the <br /> AI search era?</h2>
                 <p className="text-indigo-100 text-lg md:text-xl">
