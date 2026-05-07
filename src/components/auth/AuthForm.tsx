@@ -46,6 +46,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
   });
 
   const emailValue = form.watch("email") || "";
+  const passwordValue = form.watch("password") || "";
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
 
   const onSubmit = (data: AuthFormValues) => {
     console.log(`${type} data:`, data);
@@ -57,7 +59,12 @@ const AuthForm = ({ type }: AuthFormProps) => {
   return (
     <Card className="w-full max-w-md border-slate-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] shadow-2xl rounded-[2rem] overflow-hidden">
       <CardHeader className="space-y-1 pt-8 text-center">
-        <AuthMonster isPasswordFocused={isPasswordFocused} emailValue={emailValue} />
+        <AuthMonster 
+          isPasswordFocused={isPasswordFocused} 
+          emailValue={emailValue}
+          passwordLength={passwordValue.length}
+          isEmailValid={isEmailValid}
+        />
         <CardTitle className="text-3xl font-black tracking-tight">
           {type === "login" ? "Welcome Back" : "Create Account"}
         </CardTitle>
