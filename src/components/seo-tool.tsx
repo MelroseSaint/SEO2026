@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, 
   Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, 
-  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock
+  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { usePlan } from "@/context/PlanContext";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -27,6 +29,7 @@ import LinkingGraph from "./linking-graph";
 import AICredibility from "./ai-credibility";
 import DeterministicOutput from "./deterministic-output";
 import ComplianceAuditor from "./compliance-auditor";
+import AnalysisHistory from "./analysis-history";
 
 const SEOTool = () => {
   const [input, setInput] = useState("");
@@ -35,6 +38,8 @@ const SEOTool = () => {
   const [activeTab, setActiveTab] = useState("deterministic");
   const { plan: currentPlan } = usePlan();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  
+  const saveToConvex = useMutation(api.analyses.saveAnalysis);
 
   const liveMetrics = useMemo(() => {
     const words = input.trim() ? input.trim().split(/\s+/).length : 0;
@@ -69,26 +74,41 @@ const SEOTool = () => {
     };
   };
 
-  const executeEngine = (val: string) => {
+  const executeEngine = async (val: string) => {
     const trimmedInput = val.trim();
     if (trimmedInput.length < 3) return;
     setLoading(true);
-    setTimeout(() => {
-      setResult(analyzeText(trimmedInput));
+    
+    const analysisResult = analyzeText(trimmedInput);
+    
+    setTimeout(async () => {
+      setResult(analysisResult);
       setLoading(false);
+      
+      // Persist to Convex
+      try {
+        await saveToConvex({
+          input: trimmedInput,
+          result: analysisResult,
+          plan: currentPlan
+        });
+      } catch (error) {
+        console.error("Failed to save analysis:", error);
+      }
     }, 600);
   };
 
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     if (input.trim().length >= 3) {
-      debounceTimer.current = setTimeout(() => executeEngine(input), 500);
+      debounceTimer.current = setTimeout(() => executeEngine(input), 1000);
     }
     return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
   }, [input]);
 
   const menuItems = [
     { id: "deterministic", label: "Engine Output", icon: Terminal, tiers: ["starter", "professional", "enterprise"] },
+    { id: "history", label: "History", icon: History, tiers: ["starter", "professional", "enterprise"] },
     { id: "audit", label: "Compliance Audit", icon: ShieldAlert, tiers: ["professional", "enterprise"] },
     { id: "credibility", label: "E-E-A-T Score", icon: ShieldCheck, tiers: ["professional", "enterprise"] },
     { id: "simulation", label: "AI Simulation", icon: BrainCircuit, tiers: ["professional", "enterprise"] },
@@ -122,6 +142,13 @@ const SEOTool = () => {
       return;
     }
     setActiveTab(id);
+  };
+
+  const handleHistorySelect = (item: any) => {
+    setInput(item.input);
+    setResult(item.result);
+    setActiveTab("deterministic");
+    toast.success("Analysis loaded from history");
   };
 
   return (
@@ -181,7 +208,7 @@ const SEOTool = () => {
         </Card>
       </div>
 
-      {result && (
+      {result || activeTab === "history" ? (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[600px]">
           <div className="lg:col-span-3 space-y-1">
             <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Analysis Modules</div>
@@ -230,21 +257,35 @@ const SEOTool = () => {
             </div>
 
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {activeTab === "deterministic" && <DeterministicOutput data={result} />}
-              {activeTab === "audit" && <ComplianceAuditor data={result} />}
+              {activeTab === "deterministic" && result && <DeterministicOutput data={result} />}
+              {activeTab === "history" && <AnalysisHistory onSelect={handleHistorySelect} />}
+              {activeTab === "audit" && result && <ComplianceAuditor data={result} />}
               {activeTab === "credibility" && <AICredibility input={input} />}
               {activeTab === "simulation" && <AISimulation input={input} />}
               {activeTab === "intent" && <IntentMapping input={input} />}
               {activeTab === "structure" && <ContentStructure input={input} />}
-              {activeTab === "entities" && <EntityOptimization data={result} />}
-              {activeTab === "gap" && <GapAnalyzer data={result} />}
-              {activeTab === "refresh" && <RefreshIntelligence data={result} />}
+              {activeTab === "entities" && result && <EntityOptimization data={result} />}
+              {activeTab === "gap" && result && <GapAnalyzer data={result} />}
+              {activeTab === "refresh" && result && <RefreshIntelligence data={result} />}
               {activeTab === "generator" && <PromptGenerator />}
               {activeTab === "schema" && <SchemaBuilder />}
-              {activeTab === "graph" && <LinkingGraph data={result} />}
+              {activeTab === "graph" && result && <LinkingGraph data={result} />}
               {activeTab === "competitors" && <CompetitorAnalysis />}
+              
+              {!result && activeTab !== "history" && (
+                <div className="h-48 flex flex-col items-center justify-center text-slate-400">
+                  <Activity className="h-8 w-8 mb-2 opacity-20" />
+                  <p className="text-sm">Enter content above to see analysis</p>
+                </div>
+              )}
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="h-64 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-white/10 rounded-3xl text-slate-400 bg-slate-50/50 dark:bg-white/[0.01]">
+          <Terminal className="h-12 w-12 mb-4 opacity-10" />
+          <p className="text-lg font-bold">Engine Standby</p>
+          <p className="text-sm">Paste content or a URL above to begin the 2026 SEO analysis.</p>
         </div>
       )}
     </div>
