@@ -27,3 +27,10 @@ export const getAnalyses = query({
       .take(20);
   },
 });
+
+export const getAnalysisById = query({
+  args: { id: v.id("analyses") },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.id);
+  },
+});

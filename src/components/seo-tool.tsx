@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Terminal, ShieldAlert, ShieldCheck, BrainCircuit, Map, ListTree, 
   Fingerprint, ArrowRightLeft, RefreshCw, Wand2, Share2, Code2, 
-  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History
+  Users, Activity, Target, ChevronRight, LayoutDashboard, Lock, History, Link as LinkIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,6 +35,7 @@ const SEOTool = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [lastId, setLastId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("deterministic");
   const { plan: currentPlan } = usePlan();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
@@ -87,11 +88,12 @@ const SEOTool = () => {
       
       // Persist to Convex
       try {
-        await saveToConvex({
+        const id = await saveToConvex({
           input: trimmedInput,
           result: analysisResult,
           plan: currentPlan
         });
+        setLastId(id);
       } catch (error) {
         console.error("Failed to save analysis:", error);
       }
@@ -147,8 +149,18 @@ const SEOTool = () => {
   const handleHistorySelect = (item: any) => {
     setInput(item.input);
     setResult(item.result);
+    setLastId(item._id);
     setActiveTab("deterministic");
     toast.success("Analysis loaded from history");
+  };
+
+  const handleShare = () => {
+    if (!lastId) return;
+    const url = `${window.location.origin}/report/${lastId}`;
+    navigator.clipboard.writeText(url);
+    toast.success("Share link copied!", {
+      description: "Anyone with this link can view this analysis."
+    });
   };
 
   return (
@@ -183,7 +195,7 @@ const SEOTool = () => {
           <CardHeader className="py-3 border-b border-slate-100 dark:border-slate-800">
             <CardTitle className="text-[10px] uppercase text-slate-500 flex items-center gap-2 font-bold">
               <Target className="h-3 w-3 text-blue-600" /> Context
-            </CardTitle>
+            </Target>
           </CardHeader>
           <CardContent className="py-4 space-y-3">
             <div className="flex justify-between items-center">
@@ -251,9 +263,21 @@ const SEOTool = () => {
                   <p className="text-[10px] text-slate-500 uppercase font-bold">Module_Active_v2.6</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2 font-bold" onClick={() => toast.info("Exporting data for " + activeTab)}>
-                <Share2 className="h-3 w-3" /> EXPORT_DATA
-              </Button>
+              <div className="flex gap-2">
+                {result && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-[10px] h-8 gap-2 font-bold border-blue-500/20 hover:bg-blue-500/5" 
+                    onClick={handleShare}
+                  >
+                    <LinkIcon className="h-3 w-3 text-[#1877F2]" /> SHARE_REPORT
+                  </Button>
+                )}
+                <Button variant="outline" size="sm" className="text-[10px] h-8 gap-2 font-bold" onClick={() => toast.info("Exporting data for " + activeTab)}>
+                  <Share2 className="h-3 w-3" /> EXPORT_DATA
+                </Button>
+              </div>
             </div>
 
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
