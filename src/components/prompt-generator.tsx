@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wand2, FileText, Layout, Link as LinkIcon, Code, Check, Copy } from "lucide-react";
+import { Wand2, FileText, Layout, Link as LinkIcon, Code, Check, Copy, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { showSuccess } from "@/utils/toast";
 
 const PromptGenerator = () => {
@@ -158,5 +159,4 @@ const PromptGenerator = () => {
   );
 };
 
-import { RefreshCw } from "lucide-react";
 export default PromptGenerator;
