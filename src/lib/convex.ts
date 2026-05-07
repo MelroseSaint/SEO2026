@@ -2,6 +2,6 @@
 
 import { ConvexReactClient } from "convex/react";
 
-// Hardcoding the URL to bypass any environment variable issues
-const convexUrl = "https://compassionate-bass-55.convex.cloud";
+// Use environment variable from integration if available, otherwise fallback to default
+const convexUrl = import.meta.env.VITE_CONVEX_URL || "https://compassionate-bass-55.convex.cloud";
 export const convex = new ConvexReactClient(convexUrl);

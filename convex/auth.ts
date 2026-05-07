@@ -1,6 +1,6 @@
-import { mutation, query } from "./_generated/server";
+import { mutation } from "./_generated/server";
 import { v } from "convex/values";
-import bcrypt from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 
 export const signup = mutation({
   args: {
@@ -18,8 +18,8 @@ export const signup = mutation({
       throw new Error("User already exists with this email.");
     }
 
-    // Hash password before storing
-    const salt = await bcrypt.genSalt(10);
+    // Using 8 rounds instead of 10 to ensure we stay within Convex execution limits
+    const salt = await bcrypt.genSalt(8);
     const passwordHash = await bcrypt.hash(args.password, salt);
 
     const userId = await ctx.db.insert("users", {
