@@ -2,13 +2,19 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RefreshCw, TrendingDown, AlertTriangle, Calendar } from "lucide-react";
+import { RefreshCw, TrendingDown, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const RefreshIntelligence = () => {
+interface RefreshIntelligenceProps {
+  data: any;
+}
+
+const RefreshIntelligence = ({ data }: RefreshIntelligenceProps) => {
+  const topic = data.aiStrategy.coreEntities[0] || "your topic";
+  
   const pages = [
-    { url: "/blog/ai-trends-2024", status: "Critical", loss: "45%", reason: "Outdated entity signals" },
-    { url: "/services/seo-audit", status: "Warning", loss: "12%", reason: "Missing 2025 benchmarks" },
+    { url: `/blog/${topic.toLowerCase().replace(/\s+/g, '-')}-trends`, status: "Critical", loss: "45%", reason: "Outdated entity signals" },
+    { url: `/services/${topic.toLowerCase().replace(/\s+/g, '-')}-audit`, status: "Warning", loss: "12%", reason: "Missing 2025 benchmarks" },
     { url: "/guide/structured-data", status: "Healthy", loss: "2%", reason: "Up to date" }
   ];
 
@@ -47,7 +53,7 @@ const RefreshIntelligence = () => {
           <div>
             <h4 className="font-bold text-sm">Next Refresh Cycle: 4 Days</h4>
             <p className="text-xs text-slate-600 dark:text-gray-400">
-              Based on shifting LLM training data patterns, we recommend updating your "AI Trends" pillar page by Friday to maintain citation authority.
+              Based on shifting LLM training data patterns, we recommend updating your "{topic}" pillar page by Friday to maintain citation authority.
             </p>
           </div>
         </CardContent>

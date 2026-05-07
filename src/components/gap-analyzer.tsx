@@ -2,10 +2,15 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Bot, ArrowRightLeft, AlertCircle } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import { Search, Bot, AlertCircle } from "lucide-react";
 
-const GapAnalyzer = () => {
+interface GapAnalyzerProps {
+  data: any;
+}
+
+const GapAnalyzer = ({ data }: GapAnalyzerProps) => {
+  const topic = data.aiStrategy.coreEntities[0] || "your topic";
+
   return (
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
@@ -65,9 +70,9 @@ const GapAnalyzer = () => {
           <div className="flex items-start gap-3">
             <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400">The "Citation Gap" Opportunity</h4>
+              <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400">The "Citation Gap" Opportunity for {topic}</h4>
               <p className="text-xs text-slate-600 dark:text-gray-400 mt-1">
-                Traditional leaders like Wikipedia are losing ground in AI Overviews to niche expert content. By focusing on proprietary data and unique insights, you can out-cite the giants even if you don't out-rank them on Page 1.
+                Traditional leaders like Wikipedia are losing ground in AI Overviews for "{topic}" to niche expert content. By focusing on proprietary data and unique insights, you can out-cite the giants even if you don't out-rank them on Page 1.
               </p>
             </div>
           </div>

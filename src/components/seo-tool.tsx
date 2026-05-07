@@ -251,9 +251,9 @@ const SEOTool = () => {
               {activeTab === "simulation" && <AISimulation input={input} />}
               {activeTab === "intent" && <IntentMapping input={input} />}
               {activeTab === "structure" && <ContentStructure input={input} />}
-              {activeTab === "entities" && <EntityOptimization />}
-              {activeTab === "gap" && <GapAnalyzer />}
-              {activeTab === "refresh" && <RefreshIntelligence />}
+              {activeTab === "entities" && <EntityOptimization data={result} />}
+              {activeTab === "gap" && <GapAnalyzer data={result} />}
+              {activeTab === "refresh" && <RefreshIntelligence data={result} />}
               {activeTab === "generator" && <PromptGenerator />}
               {activeTab === "schema" && <SchemaBuilder />}
               {activeTab === "graph" && <LinkingGraph data={result} />}

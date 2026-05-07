@@ -2,16 +2,21 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Fingerprint, Plus, AlertCircle, Link2 } from "lucide-react";
+import { Fingerprint, AlertCircle, Link2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const EntityOptimization = () => {
+interface EntityOptimizationProps {
+  data: any;
+}
+
+const EntityOptimization = ({ data }: EntityOptimizationProps) => {
+  const coreEntities = data.aiStrategy.coreEntities || [];
+  const gaps = data.aiStrategy.gaps || [];
+
   const entities = [
-    { name: "Artificial Intelligence", type: "Concept", status: "Covered" },
-    { name: "Search Engine Optimization", type: "Industry", status: "Covered" },
-    { name: "User Intent", type: "Metric", status: "Missing" },
-    { name: "Semantic Web", type: "Technology", status: "Missing" },
-    { name: "LLM Training Data", type: "Concept", status: "Weak" }
+    ...coreEntities.map((name: string) => ({ name, type: "Core Entity", status: "Covered" })),
+    ...gaps.map((name: string) => ({ name, type: "Missing Signal", status: "Missing" })),
+    { name: "Semantic Web", type: "Technology", status: "Weak" }
   ];
 
   return (
@@ -51,7 +56,7 @@ const EntityOptimization = () => {
               <div>
                 <h4 className="font-bold text-sm text-amber-700 dark:text-amber-400">Critical Entity Gaps</h4>
                 <p className="text-xs text-slate-600 dark:text-gray-400 mt-1">
-                  Your content lacks "Semantic Web" and "User Intent" entities. AI search engines use these to establish topical authority.
+                  Your content lacks "{gaps[0] || 'Semantic Depth'}" and "User Intent" entities. AI search engines use these to establish topical authority.
                 </p>
               </div>
             </div>
@@ -66,7 +71,7 @@ const EntityOptimization = () => {
             </h4>
             <div className="space-y-2">
               <div className="p-2 rounded bg-white dark:bg-black/20 text-xs border border-slate-200 dark:border-white/10">
-                Link <span className="font-bold text-indigo-500">SEO</span> to <span className="font-bold text-indigo-500">LLM Context Windows</span>
+                Link <span className="font-bold text-indigo-500">{coreEntities[0]}</span> to <span className="font-bold text-indigo-500">LLM Context Windows</span>
               </div>
               <div className="p-2 rounded bg-white dark:bg-black/20 text-xs border border-slate-200 dark:border-white/10">
                 Connect <span className="font-bold text-indigo-500">User Intent</span> with <span className="font-bold text-indigo-500">Zero-Click Results</span>
