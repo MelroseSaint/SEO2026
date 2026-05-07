@@ -131,8 +131,8 @@ const SEOTool = () => {
           <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className={cn("h-2 w-2 rounded-full", loading ? "bg-indigo-500 animate-pulse" : "bg-emerald-500")} />
-                <CardTitle className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">
+                <div className={cn("h-2 w-2 rounded-full", loading ? "bg-teal-500 animate-pulse" : "bg-emerald-500")} />
+                <CardTitle className="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">
                   {loading ? "PROCESSING_CONTEXT..." : "ENGINE_READY"}
                 </CardTitle>
               </div>
@@ -145,7 +145,7 @@ const SEOTool = () => {
           <CardContent className="p-0">
             <Textarea
               placeholder="PASTE_CONTENT | ENTER_KEYWORD | ENTER_URL..."
-              className="min-h-[160px] bg-transparent border-none text-slate-900 dark:text-indigo-300 focus:ring-0 p-6 text-sm leading-relaxed resize-none"
+              className="min-h-[160px] bg-transparent border-none text-slate-900 dark:text-teal-300 focus:ring-0 p-6 text-sm leading-relaxed resize-none"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -161,7 +161,7 @@ const SEOTool = () => {
           <CardContent className="py-4 space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-[9px] text-slate-500 uppercase">Active Tier</span>
-              <span className="text-[10px] font-bold text-indigo-600 uppercase">{currentPlan}</span>
+              <span className="text-[10px] font-bold text-teal-600 uppercase">{currentPlan}</span>
             </div>
             {result ? (
               <>
@@ -194,13 +194,13 @@ const SEOTool = () => {
                   className={cn(
                     "w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-medium transition-all group",
                     activeTab === item.id 
-                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20" 
+                      ? "bg-teal-600 text-white shadow-lg shadow-teal-500/20" 
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5",
                     locked && "opacity-60 grayscale cursor-not-allowed"
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-indigo-500")} />
+                    <item.icon className={cn("h-4 w-4", activeTab === item.id ? "text-white" : "text-teal-500")} />
                     {item.label}
                   </div>
                   {locked ? (
@@ -216,8 +216,8 @@ const SEOTool = () => {
           <div className="lg:col-span-9 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xl">
             <div className="mb-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-                  {React.createElement(menuItems.find(m => m.id === activeTab)?.icon || LayoutDashboard, { className: "h-5 w-5 text-indigo-600 dark:text-indigo-400" })}
+                <div className="h-10 w-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
+                  {React.createElement(menuItems.find(m => m.id === activeTab)?.icon || LayoutDashboard, { className: "h-5 w-5 text-teal-600 dark:text-teal-400" })}
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">{menuItems.find(m => m.id === activeTab)?.label}</h3>

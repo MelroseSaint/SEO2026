@@ -37,7 +37,6 @@ const Navbar = () => {
     }
   };
 
-  // Close mobile menu on window resize
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -62,10 +61,10 @@ const Navbar = () => {
             className="flex items-center gap-2 font-bold text-xl tracking-tight cursor-pointer group" 
             onClick={handleLogoClick}
           >
-            <div className="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+            <div className="h-8 w-8 bg-teal-600 rounded-lg flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="hidden sm:inline">SEO<span className="text-indigo-600 dark:text-indigo-400">2026</span></span>
+            <span className="hidden sm:inline">SEO<span className="text-teal-600 dark:text-teal-400">2026</span></span>
           </div>
           
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -73,7 +72,7 @@ const Navbar = () => {
               <button 
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
-                className="hover:text-indigo-600 dark:hover:text-white transition-colors"
+                className="hover:text-teal-600 dark:hover:text-white transition-colors"
               >
                 {link.name}
               </button>
@@ -82,7 +81,7 @@ const Navbar = () => {
               to="/docs" 
               className={cn(
                 "transition-colors",
-                isDocsPage ? "text-indigo-600 dark:text-white" : "hover:text-indigo-600 dark:hover:text-white"
+                isDocsPage ? "text-teal-600 dark:text-white" : "hover:text-teal-600 dark:hover:text-white"
               )}
             >
               Docs
@@ -102,7 +101,7 @@ const Navbar = () => {
           </Button>
           <Button 
             onClick={() => isDocsPage ? navigate("/#tool") : scrollToSection('tool')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20"
+            className="bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-500/20"
           >
             Get Started
           </Button>
@@ -127,23 +126,23 @@ const Navbar = () => {
             <button 
               key={link.id}
               onClick={() => scrollToSection(link.id)}
-              className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors"
+              className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-white transition-colors"
             >
-              <link.icon className="h-5 w-5 text-indigo-500" />
+              <link.icon className="h-5 w-5 text-teal-500" />
               {link.name}
             </button>
           ))}
           <Link 
             to="/docs" 
             onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors"
+            className="flex items-center gap-4 text-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-white transition-colors"
           >
-            <BookOpen className="h-5 w-5 text-indigo-500" />
+            <BookOpen className="h-5 w-5 text-teal-500" />
             Documentation
           </Link>
           <div className="pt-6 border-t border-slate-100 dark:border-white/5">
             <Button 
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 rounded-xl"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white h-12 rounded-xl"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 toast.info("Login system is currently being integrated.");
