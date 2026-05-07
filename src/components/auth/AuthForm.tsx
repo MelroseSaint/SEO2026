@@ -90,6 +90,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
           id: user.userId,
           name: user.name,
           email: user.email,
+          role: user.role || "user",
         });
         toast.success(`Welcome back, ${user.name}!`);
         navigate("/dashboard");

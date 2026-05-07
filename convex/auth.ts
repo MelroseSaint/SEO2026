@@ -85,10 +85,14 @@ export const signup = mutation({
 
     const passwordHash = await hashPassword(args.password);
 
+    const ADMIN_EMAIL = "monroedoses@gmail.com";
+    const role = args.email.toLowerCase() === ADMIN_EMAIL ? "admin" : "user";
+
     const userId = await ctx.db.insert("users", {
       name: args.name,
       email: args.email,
       passwordHash,
+      role,
     });
 
     await ctx.db.insert("authAttempts", {
@@ -134,6 +138,11 @@ export const login = mutation({
       throw new Error("Invalid credentials.");
     }
 
+    const ADMIN_EMAIL = "monroedoses@gmail.com";
+    if (user.email.toLowerCase() === ADMIN_EMAIL && user.role !== "admin") {
+      await ctx.db.patch(user._id, { role: "admin" });
+    }
+
     await ctx.db.insert("authAttempts", {
       email: args.email,
       attemptType: "login",
@@ -144,6 +153,7 @@ export const login = mutation({
       userId: user._id,
       name: user.name,
       email: user.email,
+      role: user.email.toLowerCase() === ADMIN_EMAIL ? "admin" : (user.role || "user"),
     };
   },
 });

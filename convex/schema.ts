@@ -7,6 +7,11 @@ export default defineSchema({
     email: v.string(),
     passwordHash: v.string(),
     token: v.optional(v.string()),
+    role: v.optional(v.string()),
+    stripeCustomerId: v.optional(v.string()),
+    stripeSubscriptionId: v.optional(v.string()),
+    subscriptionStatus: v.optional(v.string()),
+    subscriptionPlan: v.optional(v.string()),
   }).index("by_email", ["email"]),
 
   projects: defineTable({

@@ -1,6 +1,6 @@
 /* eslint-disable */
 /**
- * Generated API for Convex.
+ * Generated `api` utility.
  *
  * THIS CODE IS AUTOMATICALLY GENERATED.
  *
@@ -12,9 +12,12 @@
 import { anyApi } from "convex/server";
 
 /**
- * A type describing your app's public Convex API.
+ * A utility for referencing Convex functions in your app's API.
  *
- * This `api` export is the primary way to interoperate with your Convex functions
- * in your frontend code.
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
  */
 export const api = anyApi;
+export const internal = anyApi;

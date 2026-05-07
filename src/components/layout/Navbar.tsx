@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn, LogOut } from "lucide-react";
+import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import BackendStatus from "@/components/backend-status";
@@ -21,7 +21,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
 
   const isDocsPage = location.pathname === "/docs";
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
@@ -46,6 +46,11 @@ const Navbar = () => {
     { name: "Pricing", path: "/pricing", icon: CreditCard },
   ];
 
+  const authedLinks = [
+    ...navLinks,
+    { name: "Dashboard", path: "/dashboard", icon: Zap },
+  ];
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/90 dark:bg-[#0f0f0f]/90 backdrop-blur-xl">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -63,7 +68,7 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-400">
-            {navLinks.map((link) => (
+{(user ? authedLinks : navLinks).map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -113,10 +118,16 @@ const Navbar = () => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/")}>
+                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
                   <Zap className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
                 </DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem onClick={() => navigate("/settings")} className="text-[#1877F2]">
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Admin</span>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => navigate("/docs")}>
                   <BookOpen className="mr-2 h-4 w-4" />
                   <span>Documentation</span>
@@ -168,7 +179,7 @@ const Navbar = () => {
         )}
       >
         <div className="flex flex-col p-6 gap-6">
-          {navLinks.map((link) => (
+          {(user ? authedLinks : navLinks).map((link) => (
             <Link
               key={link.path}
               to={link.path}

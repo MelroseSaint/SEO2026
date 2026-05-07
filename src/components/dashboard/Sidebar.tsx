@@ -33,7 +33,7 @@ const bottomItems = [
 
 const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   return (
     <aside
@@ -107,9 +107,16 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
               </div>
               <div className="overflow-hidden">
                 <p className="text-sm font-medium truncate">{user.name}</p>
-                <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                </div>
               </div>
             </div>
+            {isAdmin && (
+              <div className="mx-3 mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#1877F2]/10 text-[#1877F2] text-center">
+                Admin
+              </div>
+            )}
           </div>
         )}
       </div>
