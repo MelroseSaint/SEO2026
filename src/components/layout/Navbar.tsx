@@ -5,7 +5,6 @@ import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import BackendStatus from "@/components/backend-status";
-import { toast } from "sonner";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -15,11 +14,12 @@ const Navbar = () => {
   const location = useLocation();
 
   const isDocsPage = location.pathname === "/docs";
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
     
-    if (isDocsPage) {
+    if (isDocsPage || isAuthPage) {
       navigate(`/#${id}`);
       return;
     }
@@ -31,7 +31,7 @@ const Navbar = () => {
   };
 
   const handleLogoClick = () => {
-    if (isDocsPage) {
+    if (isDocsPage || isAuthPage) {
       navigate("/");
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -96,13 +96,13 @@ const Navbar = () => {
           <Button 
             variant="ghost" 
             className="hidden sm:flex gap-2" 
-            onClick={() => toast.info("Login system is currently being integrated.")}
+            onClick={() => navigate("/login")}
           >
             <LogIn className="h-4 w-4" />
             Log in
           </Button>
           <Button 
-            onClick={() => isDocsPage ? navigate("/#tool") : scrollToSection('tool')}
+            onClick={() => isDocsPage || isAuthPage ? navigate("/#tool") : scrollToSection('tool')}
             className="bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-lg shadow-blue-500/20 rounded-lg"
           >
             Get Started
@@ -151,7 +151,7 @@ const Navbar = () => {
               className="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white h-12 rounded-xl"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                toast.info("Login system is currently being integrated.");
+                navigate("/login");
               }}
             >
               Log in to Dashboard
