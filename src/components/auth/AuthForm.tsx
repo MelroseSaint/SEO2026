@@ -17,8 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { useMutation, useConvex } from "convex/react";
+import { api } from "@/../convex/_generated/api";
 import { useAuth } from "@/context/AuthContext";
 import AuthMonster from "./AuthMonster";
 import { Loader2 } from "lucide-react";
@@ -42,6 +42,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
   
   const navigate = useNavigate();
   const { login: setAuthUser } = useAuth();
+  const convex = useConvex();
   
   const signupMutation = useMutation(api.auth.signup);
   const loginMutation = useMutation(api.auth.login);
@@ -60,6 +61,11 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
 
   const onSubmit = async (data: AuthFormValues) => {
+    if (!convex) {
+      toast.error("Backend connection is not available. Please try again later.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       if (type === "signup") {
@@ -88,8 +94,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
         toast.success(`Welcome back, ${user.name}!`);
         navigate("/");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Authentication failed");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Authentication failed";
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

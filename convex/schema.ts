@@ -10,11 +10,17 @@ export default defineSchema({
   }).index("by_email", ["email"]),
 
   analyses: defineTable({
-    userId: v.optional(v.id("users")), // Linked to user for data isolation
+    userId: v.optional(v.id("users")),
     input: v.string(),
     result: v.any(),
     timestamp: v.number(),
     plan: v.string(),
   }).index("by_timestamp", ["timestamp"])
     .index("by_user", ["userId"]),
+
+  authAttempts: defineTable({
+    email: v.string(),
+    attemptType: v.string(),
+    timestamp: v.number(),
+  }).index("by_email_type", ["email", "attemptType"]),
 });

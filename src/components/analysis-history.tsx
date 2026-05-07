@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useConvex, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
+import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { History, Calendar, ArrowRight, Loader2, Activity, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,12 +12,13 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 interface AnalysisHistoryProps {
-  onSelect: (analysis: any) => void;
+  onSelect: (analysis: Record<string, unknown>) => void;
 }
 
 const AnalysisHistory = ({ onSelect }: AnalysisHistoryProps) => {
   const convex = useConvex();
-  const history = useQuery(api.analyses.getAnalyses);
+  const { user } = useAuth();
+  const history = useQuery(api.analyses.getAnalyses, { userId: user?.id as Id<"users"> | undefined });
   const [isConnected, setIsConnected] = useState(convex.connectionState().isWebSocketConnected);
 
   useEffect(() => {

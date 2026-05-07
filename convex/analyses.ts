@@ -3,12 +3,14 @@ import { v } from "convex/values";
 
 export const saveAnalysis = mutation({
   args: {
+    userId: v.optional(v.id("users")),
     input: v.string(),
     result: v.any(),
     plan: v.string(),
   },
   handler: async (ctx, args) => {
     const id = await ctx.db.insert("analyses", {
+      userId: args.userId,
       input: args.input,
       result: args.result,
       plan: args.plan,
@@ -19,12 +21,22 @@ export const saveAnalysis = mutation({
 });
 
 export const getAnalyses = query({
-  handler: async (ctx) => {
+  args: {
+    userId: v.optional(v.id("users")),
+  },
+  handler: async (ctx, args) => {
+    if (args.userId) {
+      return await ctx.db
+        .query("analyses")
+        .withIndex("by_user", (q) => q.eq("userId", args.userId))
+        .order("desc")
+        .take(50);
+    }
     return await ctx.db
       .query("analyses")
       .withIndex("by_timestamp")
       .order("desc")
-      .take(20);
+      .take(50);
   },
 });
 

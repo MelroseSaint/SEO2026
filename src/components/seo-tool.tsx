@@ -13,8 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { usePlan } from "@/context/PlanContext";
+import { useAuth } from "@/context/AuthContext";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 
 // Feature Components
 import AISimulation from "./ai-simulation";
@@ -36,10 +38,11 @@ const SEOTool = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<Record<string, unknown> | null>(null);
   const [lastId, setLastId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("deterministic");
   const { plan: currentPlan } = usePlan();
+  const { user } = useAuth();
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   
   const saveToConvex = useMutation(api.analyses.saveAnalysis);
@@ -96,6 +99,7 @@ const SEOTool = () => {
       // Persist to Convex
       try {
         const id = await saveToConvex({
+          userId: user?.id as Id<"users"> | undefined,
           input: trimmedInput,
           result: analysisResult,
           plan: currentPlan
@@ -168,7 +172,7 @@ const SEOTool = () => {
     setActiveTab(id);
   };
 
-  const handleHistorySelect = (item: any) => {
+  const handleHistorySelect = (item: Record<string, unknown>) => {
     setInput(item.input);
     setResult(item.result);
     setLastId(item._id);
