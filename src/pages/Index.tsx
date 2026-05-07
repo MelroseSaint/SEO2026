@@ -7,18 +7,17 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
 import { Zap, Sparkles, Shield, BarChart3, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   const scrollToTool = () => {
     const toolSection = document.getElementById('tool');
     if (toolSection) {
       toolSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  };
-
-  const handleDocsClick = () => {
-    toast.info("Documentation is being updated for the 2026 engine. Check back soon!");
   };
 
   return (
@@ -58,7 +57,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                onClick={handleDocsClick}
+                onClick={() => navigate("/docs")}
                 className="px-8 h-14 rounded-2xl text-lg border-slate-200 dark:border-white/10"
               >
                 View Documentation
@@ -159,7 +158,7 @@ const Index = () => {
             <div>
               <h4 className="font-bold mb-6">Company</h4>
               <ul className="space-y-4 text-sm text-slate-500">
-                <li><button onClick={() => toast.info("About page coming soon.")} className="hover:text-indigo-600 transition-colors">About</button></li>
+                <li><button onClick={() => navigate("/docs")} className="hover:text-indigo-600 transition-colors">About</button></li>
                 <li><button onClick={() => toast.info("Blog is launching next month.")} className="hover:text-indigo-600 transition-colors">Blog</button></li>
                 <li><button onClick={() => toast.info("We are currently hiring! Send your CV to careers@seo2026.ai")} className="hover:text-indigo-600 transition-colors">Careers</button></li>
               </ul>
