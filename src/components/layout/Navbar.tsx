@@ -1,17 +1,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn } from "lucide-react";
+import { Sparkles, Menu, X, BookOpen, Zap, CreditCard, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import BackendStatus from "@/components/backend-status";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const isDocsPage = location.pathname === "/docs";
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
@@ -93,20 +103,58 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <BackendStatus />
           <ThemeToggle />
-          <Button 
-            variant="ghost" 
-            className="hidden sm:flex gap-2" 
-            onClick={() => navigate("/login")}
-          >
-            <LogIn className="h-4 w-4" />
-            Log in
-          </Button>
-          <Button 
-            onClick={() => isDocsPage || isAuthPage ? navigate("/#tool") : scrollToSection('tool')}
-            className="bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-lg shadow-blue-500/20 rounded-lg"
-          >
-            Get Started
-          </Button>
+          
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 overflow-hidden border border-slate-200 dark:border-white/10">
+                  <div className="h-full w-full bg-blue-500/10 flex items-center justify-center text-[#1877F2] font-bold">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/")}>
+                  <Zap className="mr-2 h-4 w-4" />
+                  <span>Dashboard</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/docs")}>
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  <span>Documentation</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Button 
+                variant="ghost" 
+                className="hidden sm:flex gap-2" 
+                onClick={() => navigate("/login")}
+              >
+                <LogIn className="h-4 w-4" />
+                Log in
+              </Button>
+              <Button 
+                onClick={() => isDocsPage || isAuthPage ? navigate("/#tool") : scrollToSection('tool')}
+                className="bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-lg shadow-blue-500/20 rounded-lg"
+              >
+                Get Started
+              </Button>
+            </>
+          )}
+          
           <Button 
             variant="ghost" 
             size="icon" 
@@ -143,19 +191,28 @@ const Navbar = () => {
             Documentation
           </Link>
           <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
-            <div className="flex items-center justify-between px-2">
-              <span className="text-[10px] font-bold uppercase text-slate-500">System Status</span>
-              <BackendStatus />
-            </div>
-            <Button 
-              className="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white h-12 rounded-xl"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                navigate("/login");
-              }}
-            >
-              Log in to Dashboard
-            </Button>
+            {user ? (
+              <Button 
+                variant="destructive"
+                className="w-full h-12 rounded-xl"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  logout();
+                }}
+              >
+                Log out
+              </Button>
+            ) : (
+              <Button 
+                className="w-full bg-[#1877F2] hover:bg-[#166fe5] text-white h-12 rounded-xl"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate("/login");
+                }}
+              >
+                Log in to Dashboard
+              </Button>
+            )}
           </div>
         </div>
       </div>
